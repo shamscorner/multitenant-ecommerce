@@ -5,5 +5,5 @@ const Page = () => {
       <p className="text-lg">This is the features page of our application.</p>
     </div>
   );
-}
+};
 export default Page;

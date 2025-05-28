@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { Poppins } from 'next/font/google'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { NavbarSidebar } from './navbar-sidebar'
-import { useState } from 'react'
-import { MenuIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Poppins } from 'next/font/google';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { NavbarSidebar } from './navbar-sidebar';
+import { useState } from 'react';
+import { MenuIcon } from 'lucide-react';
 
-const poppins = Poppins({ subsets: ['latin'], weight: ['700'] })
+const poppins = Poppins({ subsets: ['latin'], weight: ['700'] });
 
 interface NavbarItemProps {
   href: string
@@ -22,8 +22,8 @@ const NavbarItem = ({ href, children, isActive }: NavbarItemProps) => {
     <Button asChild variant={isActive ? 'default' : 'neutral'}>
       <Link href={href}>{children}</Link>
     </Button>
-  )
-}
+  );
+};
 
 const navbarItems = [
   { href: '/', children: 'Home' },
@@ -31,11 +31,11 @@ const navbarItems = [
   { href: '/features', children: 'Features' },
   { href: '/pricing', children: 'Pricing' },
   { href: '/contact', children: 'Contact' },
-]
+];
 
 export const Navbar = () => {
-  const pathName = usePathname()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const pathName = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <nav className="h-20 flex border-b justify-between font-medium bg-white">
@@ -72,5 +72,5 @@ export const Navbar = () => {
         items={navbarItems}
       />
     </nav>
-  )
-}
+  );
+};

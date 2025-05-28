@@ -52,5 +52,5 @@ export const NavbarSidebar = ({ items, open, onOpenChange }: Props) => {
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

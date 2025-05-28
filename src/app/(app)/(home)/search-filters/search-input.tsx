@@ -15,5 +15,5 @@ export const SearchInput = ({ disabled }: Props) => {
       {/* TODO: Add categories view all button */}
       {/* TODO: Add library button */}
     </div>
-  )
-}
+  );
+};

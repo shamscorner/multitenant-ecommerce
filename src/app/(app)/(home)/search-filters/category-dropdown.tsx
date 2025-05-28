@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Category } from "@/payload-types";
 import { useRef, useState } from "react";
 import { useDropdownPosition } from "./use-dropdown-position";
 import { SubcategoryMenu } from "./subcategory-menu";
+import { CustomCategory } from "../types";
 
 interface Props {
-  category: Category;
+  category: CustomCategory;
   isActive?: boolean;
   isNavigationHovered?: boolean;
 }
@@ -20,12 +20,12 @@ export const CategoryDropdown = ({
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
-  const { getDropdownPosition } = useDropdownPosition(dropDownRef)
+  const { getDropdownPosition } = useDropdownPosition(dropDownRef);
 
   const handleMouseEnter = () => {
     if (!category.subcategories) return;
     setIsOpen(true);
-  }
+  };
 
   const handleMouseLeave = () => {
     setIsOpen(false);
@@ -57,7 +57,8 @@ export const CategoryDropdown = ({
           variant="reverse"
           className={cn(
             "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-border text-black",
-            isActive && !isNavigationHovered && "bg-white border-border"
+            isActive && !isNavigationHovered && "bg-white border-border",
+            isOpen && "bg-white border-border shadow-shadow -translate-x-boxShadowX -translate-y-boxShadowY",
           )}
           aria-expanded={isOpen}
           aria-haspopup="true"
@@ -81,5 +82,5 @@ export const CategoryDropdown = ({
         position={getDropdownPosition()}
       />
     </div>
-  )
-}
+  );
+};

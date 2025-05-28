@@ -1,15 +1,15 @@
-import { Category } from "@/payload-types";
 import { CategoryDropdown } from "./category-dropdown";
+import { CustomCategory } from "../types";
 
 interface Props {
-  data: any;
+  data: CustomCategory[];
 }
 
 export const Categories = ({ data }: Props) => {
   return (
     <div className="relative w-full">
       <div className="flex flex-nowrap items-center">
-        {data.map((category: Category) => (
+        {data.map((category: CustomCategory) => (
           <div key={category.id}>
             <CategoryDropdown
               category={category}
@@ -20,5 +20,5 @@ export const Categories = ({ data }: Props) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};

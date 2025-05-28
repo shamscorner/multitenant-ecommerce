@@ -28,10 +28,10 @@ export const useDropdownPosition = (
       left = 16; // 16px padding
     }
 
-    return { top, left }
+    return { top, left };
   };
 
   return {
     getDropdownPosition,
-  }
-}
+  };
+};
