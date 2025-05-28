@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function Home() {
   return (
-    <div className="min-h-screen max-w-xl mx-auto flex flex-col gap-8 justify-center p-4">
+    <div className="flex flex-col gap-8 justify-center p-4">
       <h1>Hello world</h1>
       <Button>I am a button</Button>
       <Input placeholder="I am an input" />
