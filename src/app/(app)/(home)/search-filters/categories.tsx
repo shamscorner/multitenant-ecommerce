@@ -29,24 +29,37 @@ export const Categories = ({ data }: Props) => {
 
   useEffect(() => {
     const calculateVisible = () => {
-      if (!containerRef.current || !measureRef.current || !viewAllRef.current) return;
-
-      const containerWidth = containerRef.current.offsetWidth;
-      const viewAllWidth = viewAllRef.current.offsetWidth;
-      const availableWidth = containerWidth - viewAllWidth;
-
-      const items = Array.from(measureRef.current.children);
-      let totalWidth = 0;
-      let visibleCount = 0;
-
-      for (const item of items) {
-        const width = item.getBoundingClientRect().width;
-
-        if (totalWidth + width > availableWidth) break;
-        totalWidth += width;
-        visibleCount++;
+      if (!containerRef.current || !measureRef.current || !viewAllRef.current) {
+        console.warn('Required refs not available for visibility calculation');
+        return;
       }
-      setVisibleCount(visibleCount);
+
+      try {
+        const containerWidth = containerRef.current.offsetWidth;
+        const viewAllWidth = viewAllRef.current.offsetWidth;
+        const availableWidth = containerWidth - viewAllWidth;
+
+        if (availableWidth <= 0) {
+          setVisibleCount(0);
+          return;
+        }
+
+        const items = Array.from(measureRef.current.children);
+        let totalWidth = 0;
+        let visibleCount = 0;
+
+        for (const item of items) {
+          const width = item.getBoundingClientRect().width;
+
+          if (totalWidth + width > availableWidth) break;
+          totalWidth += width;
+          visibleCount++;
+        }
+        setVisibleCount(visibleCount);
+      } catch (error) {
+        console.error('Error calculating visible items:', error);
+        setVisibleCount(data.length); // Fallback to show all
+      }
     };
 
     const debouncedCalculateVisible = () => {
@@ -60,7 +73,9 @@ export const Categories = ({ data }: Props) => {
     };
 
     const resizeObserver = new ResizeObserver(debouncedCalculateVisible);
-    resizeObserver.observe(containerRef.current!);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
 
     // Initial calculation without debounce
     calculateVisible();

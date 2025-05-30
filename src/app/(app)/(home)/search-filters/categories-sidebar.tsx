@@ -3,7 +3,7 @@ import { CustomCategory } from "../types";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Props {
   open: boolean;
@@ -16,6 +16,8 @@ export const CategoriesSidebar = ({
   onOpenChange,
   data
 }: Props) => {
+  const router = useRouter();
+
   const [parentCategories, setParentCategories] = useState<CustomCategory[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<CustomCategory | null>(null);
 
@@ -34,12 +36,20 @@ export const CategoriesSidebar = ({
       return;
     }
 
-    if (parentCategories && selectedCategory) {
-      router.push(`/${selectedCategory.slug}/${category.slug}`);
-    } else if (category.slug === 'all') {
-      router.push('/');
-    } else {
-      router.push(`/${category.slug}`);
+    try {
+      let navigationPath: string;
+
+      if (parentCategories && selectedCategory) {
+        navigationPath = `/${selectedCategory.slug}/${category.slug}`;
+      } else if (category.slug === 'all') {
+        navigationPath = '/';
+      } else {
+        navigationPath = `/${category.slug}`;
+      }
+
+      router.push(navigationPath);
+    } catch (error) {
+      console.error('Navigation error:', error);
     }
 
     handleOpenChange(false);
