@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload';
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -33,4 +33,4 @@ export const Categories: CollectionConfig = {
       hasMany: true,
     }
   ],
-}
+};
