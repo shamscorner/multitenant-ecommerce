@@ -1,9 +1,4 @@
-// Note: First run the fresh command then wait for 2 seconds before running this seed script.
-
-import { getPayload } from "payload";
-import config from "@payload-config";
-
-const categories = [
+export const categories = [
   {
     name: "All",
     slug: "all",
@@ -138,39 +133,3 @@ const categories = [
     ],
   },
 ];
-
-const seed = async () => {
-  const payload = await getPayload({ config });
-
-  for(const category of categories) {
-    const parentCategory =  await payload.create({
-      collection: "categories",
-      data: {
-        name: category.name,
-        slug: category.slug,
-        color: category.color,
-        parent: null,
-      }
-    });
-
-    for (const subcategory of category.subcategories || []) {
-      await payload.create({
-        collection: "categories",
-        data: {
-          name: subcategory.name,
-          slug: subcategory.slug,
-          parent: parentCategory.id,
-        }
-      });
-    }
-  }
-};
-
-try {
-  await seed();
-  console.log("Seed completed successfully.");
-  process.exit(0);
-} catch (error) {
-  console.error("Error during seed:", error);
-  process.exit(1);
-}
