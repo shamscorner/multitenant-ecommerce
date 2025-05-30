@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Category } from "@/payload-types";
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface Props {
@@ -33,7 +32,7 @@ export const SubcategoryMenu = ({
         style={{ backgroundColor }}
       >
         <div>
-          {category.subcategories?.map((subcategory: Category) => (
+          {category.subcategories?.map((subcategory) => (
             <Link
               key={subcategory.slug}
               href={`/${category.slug}/${subcategory.slug}`}
