@@ -62,10 +62,16 @@ export const Navbar = () => {
         ))}
       </div>
 
-      {session.data?.user ? (
+      {session.isLoading ? (
+        <div className="hidden lg:flex items-center pr-8">
+          <span>Loading...</span>
+        </div>
+      ) : session.data?.user ? (
         <div className='hidden lg:flex'>
           <Link
             href="/admin"
+            aria-label='Go to dashboard'
+            title='Go to dashboard'
             className='flex items-center justify-center border-l border-t-0 border-r-0 px-8 h-full rounded-none bg-black text-white hover:bg-teal-400 hover:text-black transition-colors text-lg'
           >
             Dashboard
@@ -75,6 +81,8 @@ export const Navbar = () => {
         <div className='hidden lg:flex'>
           <Link
             href="/sign-in"
+            aria-label='Log in to your account'
+            title='Log in to your account'
             className='flex items-center justify-center border-l border-t-0 border-b-0 border-r-0 px-8 h-full rounded-none bg-white hover:bg-teal-400 transition-colors text-lg'
             prefetch
           >
@@ -82,6 +90,8 @@ export const Navbar = () => {
           </Link>
           <Link
             href="/sign-up"
+            aria-label='Start selling with us'
+            title='Start selling with us'
             className='flex items-center justify-center border-l border-t-0 border-r-0 px-8 h-full rounded-none bg-black text-white hover:bg-teal-400 hover:text-black transition-colors text-lg'
             prefetch
           >
