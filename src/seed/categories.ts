@@ -4,8 +4,8 @@ export const categories = [
     slug: "all",
   },
   {
-    name: "Business & Money",
     color: "#FFB347",
+    name: "Business & Money",
     slug: "business-money",
     subcategories: [
       { name: "Accounting", slug: "accounting" },
@@ -26,8 +26,8 @@ export const categories = [
     ],
   },
   {
-    name: "Software Development",
     color: "#7EC8E3",
+    name: "Software Development",
     slug: "software-development",
     subcategories: [
       { name: "Web Development", slug: "web-development" },
@@ -38,8 +38,8 @@ export const categories = [
     ],
   },
   {
-    name: "Writing & Publishing",
     color: "#D8B5FF",
+    name: "Writing & Publishing",
     slug: "writing-publishing",
     subcategories: [
       { name: "Fiction", slug: "fiction" },
@@ -54,8 +54,8 @@ export const categories = [
     slug: "other",
   },
   {
-    name: "Education",
     color: "#FFE066",
+    name: "Education",
     slug: "education",
     subcategories: [
       { name: "Online Courses", slug: "online-courses" },
@@ -65,8 +65,8 @@ export const categories = [
     ],
   },
   {
-    name: "Self Improvement",
     color: "#96E6B3",
+    name: "Self Improvement",
     slug: "self-improvement",
     subcategories: [
       { name: "Productivity", slug: "productivity" },
@@ -76,8 +76,8 @@ export const categories = [
     ],
   },
   {
-    name: "Fitness & Health",
     color: "#FF9AA2",
+    name: "Fitness & Health",
     slug: "fitness-health",
     subcategories: [
       { name: "Workout Plans", slug: "workout-plans" },
@@ -87,8 +87,8 @@ export const categories = [
     ],
   },
   {
-    name: "Design",
     color: "#B5B9FF",
+    name: "Design",
     slug: "design",
     subcategories: [
       { name: "UI/UX", slug: "ui-ux" },
@@ -98,8 +98,8 @@ export const categories = [
     ],
   },
   {
-    name: "Drawing & Painting",
     color: "#FFCAB0",
+    name: "Drawing & Painting",
     slug: "drawing-painting",
     subcategories: [
       { name: "Watercolor", slug: "watercolor" },
@@ -110,8 +110,8 @@ export const categories = [
     ],
   },
   {
-    name: "Music",
     color: "#FFD700",
+    name: "Music",
     slug: "music",
     subcategories: [
       { name: "Songwriting", slug: "songwriting" },
@@ -121,8 +121,8 @@ export const categories = [
     ],
   },
   {
-    name: "Photography",
     color: "#FF6B6B",
+    name: "Photography",
     slug: "photography",
     subcategories: [
       { name: "Portrait", slug: "portrait" },

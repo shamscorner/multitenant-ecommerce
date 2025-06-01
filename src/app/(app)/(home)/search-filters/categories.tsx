@@ -1,12 +1,14 @@
 "use client";
 
-import { CategoryDropdown } from "./category-dropdown";
 import { useEffect, useRef, useState } from "react";
+import { ListFilterIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ListFilterIcon } from "lucide-react";
-import { CategoriesSidebar } from "./categories-sidebar";
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
+
+import { CategoriesSidebar } from "./categories-sidebar";
+import { CategoryDropdown } from "./category-dropdown";
 
 interface Props {
   data: CategoriesGetManyOutput;
@@ -92,16 +94,16 @@ export const Categories = ({ data }: Props) => {
     <div className="relative w-full">
       {/* Categories sidebar */}
       <CategoriesSidebar
-        open={isSidebarOpen}
         onOpenChange={setIsSidebarOpen}
+        open={isSidebarOpen}
       />
 
       {/* Hidden container only for measuring all items */}
       <div
-        ref={measureRef}
-        className="absolute opacity-0 pointer-events-none flex"
-        style={{ position: "fixed", top: -9999, left: -9999 }}
         aria-hidden="true"
+        className="absolute opacity-0 pointer-events-none flex"
+        ref={measureRef}
+        style={{ left: -9999, position: "fixed", top: -9999 }}
       >
         {data.map((category: CategoriesGetManyOutput[number]) => (
           <div key={category.id}>
@@ -116,10 +118,10 @@ export const Categories = ({ data }: Props) => {
 
       {/* Visible items */}
       <div
-        ref={containerRef}
         className="flex flex-nowrap items-center"
         onMouseEnter={() => setIsAnyHovered(true)}
         onMouseLeave={() => setIsAnyHovered(false)}
+        ref={containerRef}
       >
         {data.slice(0, visibleCount).map((category) => (
           <div key={category.id}>
@@ -132,14 +134,14 @@ export const Categories = ({ data }: Props) => {
         ))}
 
         {/* View All button */}
-        <div ref={viewAllRef} className="shrink-0">
+        <div className="shrink-0" ref={viewAllRef}>
           <Button
-            variant="reverse"
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-border text-black",
               isActiveCategoryHidden && !isAnyHovered && "bg-white border-border",
             )}
             onClick={() => setIsSidebarOpen(true)}
+            variant="reverse"
           >
             View All
             <ListFilterIcon className="ml-2" />

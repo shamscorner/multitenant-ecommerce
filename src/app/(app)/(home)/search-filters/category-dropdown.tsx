@@ -1,12 +1,14 @@
 "use client";
 
+import { useRef, useState } from "react";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
-import { useDropdownPosition } from "./use-dropdown-position";
-import { SubcategoryMenu } from "./subcategory-menu";
-import Link from "next/link";
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
+
+import { SubcategoryMenu } from "./subcategory-menu";
+import { useDropdownPosition } from "./use-dropdown-position";
 
 interface Props {
   category: CategoriesGetManyOutput[number];
@@ -47,23 +49,23 @@ export const CategoryDropdown = ({
   return (
     <div
       className="relative"
-      ref={dropDownRef}
+      onKeyDown={handleKeyDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onKeyDown={handleKeyDown}
+      ref={dropDownRef}
       role="navigation"
     >
       <div className="relative">
         <Button
-          variant="reverse"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          asChild
           className={cn(
             "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-border text-black",
             isActive && !isNavigationHovered && "bg-white border-border",
             isOpen && "bg-white border-border shadow-shadow -translate-x-boxShadowX -translate-y-boxShadowY",
           )}
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-          asChild
+          variant="reverse"
         >
           <Link href={`/${category.slug === 'all' ? '' : category.slug}`}>
             {category.name}

@@ -1,9 +1,12 @@
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { headers as getHeaders, cookies as getCookies } from 'next/headers';
-import z from "zod";
-import { AUTH_COOKIE } from "../constants";
+import { cookies as getCookies, headers as getHeaders } from 'next/headers';
 import { BasePayload } from "payload";
+import z from "zod";
+
+import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+
+import { AUTH_COOKIE } from "../constants";
+import { registerSchema } from "../schemas";
 
 const login = async (
   ctx: { db: BasePayload },
@@ -26,10 +29,10 @@ const login = async (
 
     const cookies = await getCookies();
     cookies.set({
-      name: AUTH_COOKIE,
-      value: data.token,
       httpOnly: true,
+      name: AUTH_COOKIE,
       path: '/',
+      value: data.token,
       // TODO: ensure cross-domain cookie sharing
       // sameSite: 'none',
       // domain: ''
@@ -39,33 +42,26 @@ const login = async (
 };
 
 export const authRouter = createTRPCRouter({
-  session: baseProcedure.query(async ({ ctx }) => {
-    const headers = await getHeaders();
-    const session = await ctx.db.auth({ headers });
-    return session;
-  }),
-
-  register: baseProcedure
+  login: baseProcedure
     .input(
       z.object({
         email: z.string().email(),
-        password: z.string(), // TODO: Add password validation
-        username: z
-          .string()
-          .min(3, "Username must be at least 3 characters long")
-          .max(63, "Username must be at most 63 characters long")
-          .regex(
-            /^[a-z0-9][a-z0-9-]*[a-z0-9]$/,
-            "Username must start and end with a letter or number, and can only contain letters, numbers, and hyphens"
-          )
-          .refine(
-            (val) => !val.includes("--"),
-            "Username cannot contain consecutive hyphens"
-          )
-          .transform((val) => val.toLowerCase()),
+        password: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ ctx, input }) => {
+      const data = await login(ctx, input);
+      return data;
+    }),
+
+  logout: baseProcedure.mutation(async () => {
+    const cookies = await getCookies();
+    cookies.delete(AUTH_COOKIE);
+  }),
+
+  register: baseProcedure
+    .input(registerSchema)
+    .mutation(async ({ ctx, input }) => {
       await ctx.db.create({
         collection: "users",
         data: {
@@ -77,20 +73,9 @@ export const authRouter = createTRPCRouter({
 
       await login(ctx, input);
     }),
-
-  login: baseProcedure
-    .input(
-      z.object({
-        email: z.string().email(),
-        password: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const data = await login(ctx, input);
-      return data;
-    }),
-  logout: baseProcedure.mutation(async () => {
-    const cookies = await getCookies();
-    cookies.delete(AUTH_COOKIE);
+  session: baseProcedure.query(async ({ ctx }) => {
+    const headers = await getHeaders();
+    const session = await ctx.db.auth({ headers });
+    return session;
   })
 });

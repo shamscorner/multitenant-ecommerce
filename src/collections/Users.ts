@@ -1,7 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
 export const Users: CollectionConfig = {
-  slug: 'users',
   admin: {
     useAsTitle: 'email',
   },
@@ -11,8 +10,9 @@ export const Users: CollectionConfig = {
     {
       name: "username",
       required: true,
-      unique: true,
-      type: "text"
+      type: "text",
+      unique: true
     }
   ],
+  slug: 'users',
 };

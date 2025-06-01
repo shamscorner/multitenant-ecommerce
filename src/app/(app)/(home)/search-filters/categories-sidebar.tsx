@@ -1,20 +1,21 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
+import { useTRPC } from "@/trpc/client";
 
 interface Props {
-  open: boolean;
   onOpenChange: (open: boolean) => void;
+  open: boolean;
 }
 
 export const CategoriesSidebar = ({
-  open,
   onOpenChange,
+  open,
 }: Props) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.categories.getMany.queryOptions());
@@ -67,10 +68,10 @@ export const CategoriesSidebar = ({
   const backgroundColor = selectedCategory?.color || 'white';
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet onOpenChange={onOpenChange} open={open}>
       <SheetContent
-        side="left"
         className="p-0 transition-none"
+        side="left"
         style={{ backgroundColor: backgroundColor }}
       >
         <SheetHeader className="p-4 border-b">
@@ -82,8 +83,8 @@ export const CategoriesSidebar = ({
         >
           {parentCategories && (
             <button
-              onClick={handleBackNavigation}
               className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              onClick={handleBackNavigation}
             >
               <ChevronLeftIcon className="size-4 mr-2" />
               Back
@@ -91,9 +92,9 @@ export const CategoriesSidebar = ({
           )}
           {currentCategories.map((category) => (
             <button
+              className="w-full text-left p-4 hover:bg-black hover:text-white flex justify-between items-center text-base font-medium"
               key={category.slug}
               onClick={() => handleSelectCategory(category)}
-              className="w-full text-left p-4 hover:bg-black hover:text-white flex justify-between items-center text-base font-medium"
             >
               {category.name}
               {category.subcategories && category.subcategories.length > 0 && (

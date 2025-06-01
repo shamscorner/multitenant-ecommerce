@@ -1,8 +1,10 @@
+import { Suspense } from "react";
+
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
+
 import { Footer } from "./footer";
 import { Navbar } from "./navbar";
 import { SearchFilters, SearchFiltersLoadingSkeleton } from "./search-filters";
-import { Suspense } from "react";
 
 interface Props {
   children: React.ReactNode;
