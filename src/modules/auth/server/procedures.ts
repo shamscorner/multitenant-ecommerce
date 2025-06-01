@@ -34,6 +34,7 @@ const login = async (
       value: data.token,
       // TODO: ensure cross-domain cookie sharing
       // sameSite: 'none',
+      // secure: true, // Enable this if using HTTPS
       // domain: ''
     });
 
@@ -44,7 +45,8 @@ export const authRouter = createTRPCRouter({
   login: baseProcedure
     .input(loginSchema)
     .mutation(async ({ ctx, input }) => {
-      const data = await login(ctx, input);
+      const { email, password } = input || {};
+      const data = await login(ctx, { email, password });
       return data;
     }),
 
@@ -84,7 +86,8 @@ export const authRouter = createTRPCRouter({
         }
       });
 
-      await login(ctx, input);
+      const { email, password } = input || {};
+      await login(ctx, { email, password });
     }),
 
   session: baseProcedure.query(async ({ ctx }) => {

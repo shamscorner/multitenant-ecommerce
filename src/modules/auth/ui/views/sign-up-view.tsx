@@ -60,6 +60,8 @@ export const SignUpView = () => {
 
   const showPreview = username && !usernameErrors;
 
+  const AUTH_BACKGROUND_IMAGE = '/auth-bg.png';
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5">
       <div className="bg-[#f4f4f0] h-screen w-full lg:col-span-3 overflow-y-auto">
@@ -91,7 +93,12 @@ export const SignUpView = () => {
                 <FormItem>
                   <FormLabel className='text-base'>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      placeholder='Enter your username'
+                      autoFocus
+                      spellCheck='false'
+                    />
                   </FormControl>
                   <FormDescription className={cn('hidden', showPreview && 'block')}>
                   {/* TODO: use proper method to generate preview url later */}
@@ -108,7 +115,16 @@ export const SignUpView = () => {
                 <FormItem>
                   <FormLabel className='text-base'>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      type='email'
+                      autoComplete='email'
+                      placeholder='Enter your email address'
+                      autoFocus
+                      spellCheck='false'
+                      inputMode='email'
+                      pattern='^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +136,11 @@ export const SignUpView = () => {
                 <FormItem>
                   <FormLabel className='text-base'>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type='password' />
+                    <Input
+                      {...field}
+                      type='password'
+                      placeholder='Enter your password'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +158,7 @@ export const SignUpView = () => {
       <div
         className="h-screen w-full lg:col-span-2 hidden lg:block"
         style={{
-          backgroundImage: "url('/auth-bg.png')",
+          backgroundImage: `url('${AUTH_BACKGROUND_IMAGE}')`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
