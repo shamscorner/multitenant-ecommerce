@@ -1,22 +1,23 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import Link from "next/link";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+
 interface NavbarItem {
-  href: string;
   children: React.ReactNode;
+  href: string;
 }
 
 interface Props {
   items: NavbarItem[];
-  open: boolean;
   onOpenChange: (open: boolean) => void;
+  open: boolean;
 }
 
-export const NavbarSidebar = ({ items, open, onOpenChange }: Props) => {
+export const NavbarSidebar = ({ items, onOpenChange, open }: Props) => {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="p-0 transition-none">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="p-0 transition-none" side="left">
         <SheetHeader className="p-4 border-b">
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
@@ -24,9 +25,9 @@ export const NavbarSidebar = ({ items, open, onOpenChange }: Props) => {
         <ScrollArea className="flex flex-col overflow-y-auto h-full pb-2">
           {items.map((item) => (
             <Link
-              key={item.href}
-              href={item.href}
               className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              href={item.href}
+              key={item.href}
               onClick={() => onOpenChange(false)} // Close sidebar on item click
             >
               {item.children}
@@ -35,15 +36,15 @@ export const NavbarSidebar = ({ items, open, onOpenChange }: Props) => {
 
           <div className="border-t">
             <Link
-              href="/sign-in"
               className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              href="/sign-in"
               onClick={() => onOpenChange(false)} // Close sidebar on item click
             >
               Log in
             </Link>
             <Link
-              href="/sign-up"
               className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              href="/sign-up"
               onClick={() => onOpenChange(false)} // Close sidebar on item click
             >
               Start Selling

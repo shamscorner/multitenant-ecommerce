@@ -1,8 +1,8 @@
 // Note: Run `npm run db:fresh` and ensure the database is fully initialized before running this seed script.
 // This ensures all collections and schema are properly set up before seeding data.
 
-import { getPayload } from "payload";
 import config from "@payload-config";
+import { getPayload } from "payload";
 
 import { categories } from './categories';
 
@@ -13,10 +13,10 @@ const seed = async () => {
     const parentCategory =  await payload.create({
       collection: "categories",
       data: {
-        name: category.name,
-        slug: category.slug,
         color: category.color,
+        name: category.name,
         parent: null,
+        slug: category.slug,
       }
     });
 
@@ -28,8 +28,8 @@ const seed = async () => {
             collection: "categories",
             data: {
               name: subcategory.name,
-              slug: subcategory.slug,
               parent: parentCategory.id,
+              slug: subcategory.slug,
             }
           })
         )

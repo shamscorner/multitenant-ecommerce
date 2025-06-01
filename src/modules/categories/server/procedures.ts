@@ -1,5 +1,5 @@
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { Category } from "@/payload-types";
+import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 export const categoriesRouter = createTRPCRouter({
   getMany: baseProcedure.query(async ({ ctx }) => {
@@ -7,12 +7,12 @@ export const categoriesRouter = createTRPCRouter({
       collection: 'categories',
       depth: 1, // populate subcategories
       pagination: false,
+      sort: 'name',
       where: {
         parent: {
           exists: false,
         }
-      },
-      sort: 'name'
+      }
     });
 
     const formattedData = data.docs.map((doc) => ({

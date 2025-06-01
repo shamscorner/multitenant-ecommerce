@@ -1,8 +1,8 @@
-import superjson from 'superjson';
+import { cache } from 'react';
+import payloadConfig from '@payload-config';
 import { initTRPC } from '@trpc/server';
 import { getPayload } from 'payload';
-import payloadConfig from '@payload-config';
-import { cache } from 'react';
+import superjson from 'superjson';
 export const createTRPCContext = cache(async () => {
   /**
    * @see: https://trpc.io/docs/server/context

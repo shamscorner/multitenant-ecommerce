@@ -1,10 +1,11 @@
 import Link from "next/link";
+
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface Props {
   category: CategoriesGetManyOutput[number];
   isOpen: boolean;
-  position: { top: number; left: number };
+  position: { left: number; top: number; };
 }
 
 export const SubcategoryMenu = ({
@@ -22,8 +23,8 @@ export const SubcategoryMenu = ({
     <div
       className="fixed z-100"
       style={{
-        top: position.top,
         left: position.left,
+        top: position.top,
       }}
     >
       <div className="h-3 w-60"></div>
@@ -34,9 +35,9 @@ export const SubcategoryMenu = ({
         <div>
           {category.subcategories?.map((subcategory) => (
             <Link
-              key={subcategory.slug}
-              href={`/${category.slug}/${subcategory.slug}`}
               className="w-full text-left p-4 hover:bg-black hover:text-white flex justify-between items-center underline font-medium"
+              href={`/${category.slug}/${subcategory.slug}`}
+              key={subcategory.slug}
             >
               {subcategory.name}
             </Link>
