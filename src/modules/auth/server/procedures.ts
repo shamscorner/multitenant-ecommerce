@@ -1,12 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { cookies as getCookies, headers as getHeaders } from 'next/headers';
 import { BasePayload } from "payload";
-import z from "zod";
 
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 import { AUTH_COOKIE } from "../constants";
-import { registerSchema } from "../schemas";
+import { loginSchema, registerSchema } from "../schemas";
 
 const login = async (
   ctx: { db: BasePayload },
@@ -43,12 +42,7 @@ const login = async (
 
 export const authRouter = createTRPCRouter({
   login: baseProcedure
-    .input(
-      z.object({
-        email: z.string().email(),
-        password: z.string(),
-      })
-    )
+    .input(loginSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await login(ctx, input);
       return data;
@@ -62,6 +56,25 @@ export const authRouter = createTRPCRouter({
   register: baseProcedure
     .input(registerSchema)
     .mutation(async ({ ctx, input }) => {
+      const existingData = await ctx.db.find({
+        collection: "users",
+        limit: 1,
+        where: {
+          username: {
+            equals: input.username,
+          },
+        }
+      });
+
+      const existingUser = existingData.docs[0];
+
+      if (existingUser) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Username already taken",
+        });
+      }
+
       await ctx.db.create({
         collection: "users",
         data: {
@@ -73,6 +86,7 @@ export const authRouter = createTRPCRouter({
 
       await login(ctx, input);
     }),
+
   session: baseProcedure.query(async ({ ctx }) => {
     const headers = await getHeaders();
     const session = await ctx.db.auth({ headers });

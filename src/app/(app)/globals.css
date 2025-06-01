@@ -12,6 +12,8 @@
   --color-border: var(--border);
   --color-overlay: var(--overlay);
   --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -44,6 +46,8 @@
   --main: oklch(78.57% 0.1422 180.36);
   --border: oklch(0% 0 0);
   --ring: oklch(0% 0 0);
+  --destructive: oklch(62.8% 0.257 29.23);
+  --destructive-foreground: oklch(98% 0 0);
   --overlay: oklch(0% 0 0 / 0.8);
   --shadow: 4px 4px 0px 0px var(--border);
   --chart-1: #00D6BD;
@@ -70,6 +74,8 @@
   --main: oklch(71.47% 0.129261 180.4742);
   --border: oklch(0% 0 0);
   --ring: oklch(100% 0 0);
+  --destructive: oklch(65.69% 0.196 27.33);
+  --destructive-foreground: oklch(98% 0 0);
   --shadow: 4px 4px 0px 0px var(--border);
   --chart-1: #00BDA7;
   --chart-2: #008AE5;
