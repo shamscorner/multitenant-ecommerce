@@ -56,8 +56,8 @@ export const Navbar = () => {
       </div>
 
       <div className='hidden lg:flex'>
-        <Link href="/sign-in" className='flex items-center justify-center border-l border-t-0 border-b-0 border-r-0 px-8 h-full rounded-none bg-white hover:bg-teal-400 transition-colors text-lg'>Log in</Link>
-        <Link href="/sign-up" className='flex items-center justify-center border-l border-t-0 border-r-0 px-8 h-full rounded-none bg-black text-white hover:bg-teal-400 hover:text-black transition-colors text-lg'>Start Selling</Link>
+        <Link prefetch href="/sign-in" className='flex items-center justify-center border-l border-t-0 border-b-0 border-r-0 px-8 h-full rounded-none bg-white hover:bg-teal-400 transition-colors text-lg'>Log in</Link>
+        <Link prefetch href="/sign-up" className='flex items-center justify-center border-l border-t-0 border-r-0 px-8 h-full rounded-none bg-black text-white hover:bg-teal-400 hover:text-black transition-colors text-lg'>Start Selling</Link>
       </div>
 
       <div className='flex lg:hidden items-center justify-center pr-6'>
