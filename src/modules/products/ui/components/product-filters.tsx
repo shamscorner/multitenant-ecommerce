@@ -40,7 +40,7 @@ const ProductFilter = ({ title, className, children }: ProductFilterProps) => {
 export const ProductFilters = () => {
   const [filters, setFilters] = useProductFilters();
 
-  const onChange = (key:  keyof typeof filters, value: unknown) => {
+  const onChange = (key:  keyof typeof filters, value: string | null) => {
     setFilters({ ...filters, [key]: value });
   };
 
