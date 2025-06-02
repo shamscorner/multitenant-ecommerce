@@ -12,7 +12,7 @@ export const productsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const where: Where = {};
 
-      if(input.categorySlug) {
+      if (input.categorySlug) {
         const categoriesData =  await ctx.db.find({
           collection: "categories",
           limit: 1,
@@ -29,15 +29,14 @@ export const productsRouter = createTRPCRouter({
         const parentCategory = formattedCategoriesData[0];
         const subcategoriesSlug: string[] = [];
 
-        if(parentCategory) {
+        if (parentCategory) {
           subcategoriesSlug.push(
             ...parentCategory.subcategories.map((subcategory) => subcategory.slug)
           );
+          where["category.slug"] = {
+            in: [parentCategory.slug, ...subcategoriesSlug],
+          };
         }
-
-        where["category.slug"] = {
-          in: [input.categorySlug, ...subcategoriesSlug],
-        };
       }
 
       const data = await ctx.db.find({
