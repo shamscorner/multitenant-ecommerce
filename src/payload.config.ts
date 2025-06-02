@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import { Categories } from "./collections/Categories";
 import { Media } from "./collections/Media";
 import { Products } from "./collections/Products";
+import { Tags } from "./collections/Tags";
 import { Users } from "./collections/Users";
 
 const filename = fileURLToPath(import.meta.url);
@@ -22,7 +23,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Media, Categories, Products],
+  collections: [Users, Media, Categories, Products, Tags],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
   }),

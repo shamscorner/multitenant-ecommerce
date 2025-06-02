@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { SearchParams } from "nuqs";
 
-import { loadProductFilters } from "@/modules/products/hooks/use-product-filters";
+import { loadProductFilters } from "@/modules/products/searchParams";
 import { ProductFilters } from "@/modules/products/ui/components/product-filters";
 import { ProductList, ProductListLoadingSkeleton } from "@/modules/products/ui/components/product-list";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
