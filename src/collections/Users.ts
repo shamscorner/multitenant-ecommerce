@@ -1,8 +1,8 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig } from "payload";
 
 export const Users: CollectionConfig = {
   admin: {
-    useAsTitle: 'email',
+    useAsTitle: "email",
   },
   auth: true,
   fields: [
@@ -14,5 +14,5 @@ export const Users: CollectionConfig = {
       unique: true
     }
   ],
-  slug: 'users',
+  slug: "users",
 };

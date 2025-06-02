@@ -28,7 +28,7 @@ export const Categories = ({ data }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const categoryParam = params.category as string | undefined;
-  const activeCategory = categoryParam || 'all';
+  const activeCategory = categoryParam || "all";
 
   const activeCategoryIndex = data.findIndex((category) => category.slug === activeCategory);
   const isActiveCategoryHidden = activeCategoryIndex >= visibleCount && activeCategoryIndex !== -1;
@@ -36,7 +36,7 @@ export const Categories = ({ data }: Props) => {
   useEffect(() => {
     const calculateVisible = () => {
       if (!containerRef.current || !measureRef.current || !viewAllRef.current) {
-        console.warn('Required refs not available for visibility calculation');
+        console.warn("Required refs not available for visibility calculation");
         return;
       }
 
@@ -63,7 +63,7 @@ export const Categories = ({ data }: Props) => {
         }
         setVisibleCount(visibleCount);
       } catch (error) {
-        console.error('Error calculating visible items:', error);
+        console.error("Error calculating visible items:", error);
         setVisibleCount(data.length); // Fallback to show all
       }
     };

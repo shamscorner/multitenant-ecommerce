@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig } from "payload";
 
 export const Media: CollectionConfig = {
   access: {
@@ -6,11 +6,11 @@ export const Media: CollectionConfig = {
   },
   fields: [
     {
-      name: 'alt',
+      name: "alt",
       required: true,
-      type: 'text',
+      type: "text",
     },
   ],
-  slug: 'media',
+  slug: "media",
   upload: true,
 };

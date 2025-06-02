@@ -17,7 +17,7 @@ export const SubcategoryMenu = ({
     return null;
   }
 
-  const backgroundColor = category.color || '#f5f5f5';
+  const backgroundColor = category.color || "#f5f5f5";
 
   return (
     <div

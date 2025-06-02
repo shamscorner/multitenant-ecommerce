@@ -1,11 +1,11 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig } from "payload";
 
 export const Categories: CollectionConfig = {
   fields: [
     {
-      name: 'name',
+      name: "name",
       required: true,
-      type: 'text',
+      type: "text",
     },
     {
       index: true,
@@ -15,8 +15,8 @@ export const Categories: CollectionConfig = {
       unique: true,
     },
     {
-      name: 'color',
-      type: 'text',
+      name: "color",
+      type: "text",
     },
     {
       hasMany: false,
@@ -25,12 +25,15 @@ export const Categories: CollectionConfig = {
       type: "relationship",
     },
     {
-      collection: 'categories',
+      collection: "categories",
       hasMany: true,
-      name: 'subcategories',
-      on: 'parent',
-      type: 'join',
+      name: "subcategories",
+      on: "parent",
+      type: "join",
     }
   ],
-  slug: 'categories',
+  slug: "categories",
+  admin: {
+    useAsTitle: "name",
+  }
 };

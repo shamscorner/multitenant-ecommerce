@@ -1,15 +1,15 @@
 "use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Poppins } from 'next/font/google';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import z from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Poppins } from "next/font/google";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import z from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,14 +17,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import { useTRPC } from '@/trpc/client';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 
-import { loginSchema } from '../../schemas';
+import { loginSchema } from "../../schemas";
 
-const poppins = Poppins({ subsets: ['latin'], weight: ['700'] });
+const poppins = Poppins({ subsets: ["latin"], weight: ["700"] });
 
 export const SignInView = () => {
   const router = useRouter();
@@ -37,16 +37,16 @@ export const SignInView = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries(trpc.auth.session.queryFilter());
-      router.push('/');
+      router.push("/");
     }
   }));
 
   const form = useForm<z.infer<typeof loginSchema>>({
-    mode: 'all',
+    mode: "all",
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -54,7 +54,7 @@ export const SignInView = () => {
     loginMutation.mutate(data);
   };
 
-  const AUTH_BACKGROUND_IMAGE = '/auth-bg.png';
+  const AUTH_BACKGROUND_IMAGE = "/auth-bg.png";
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5">
@@ -66,7 +66,7 @@ export const SignInView = () => {
           >
             <div className='flex items-center justify-between mb-8'>
               <Link href="/">
-                <span className={cn('text-2xl', poppins.className)}>ShamsRoad</span>
+                <span className={cn("text-2xl", poppins.className)}>ShamsRoad</span>
               </Link>
               <Button
                 asChild

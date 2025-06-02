@@ -13,7 +13,7 @@ export const BreadcrumbNavigation = ({
   activeCategoryName,
   activeSubCategoryName,
 }: Props) => {
-  if (!activeCategoryName || activeCategorySlug === 'all') return null;
+  if (!activeCategoryName || activeCategorySlug === "all") return null;
 
   return (
     <Breadcrumb>
