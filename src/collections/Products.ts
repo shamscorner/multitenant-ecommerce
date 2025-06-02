@@ -13,6 +13,9 @@ export const Products: CollectionConfig = {
     },
     {
       name: "price",
+      admin: {
+        description: "Price in USD",
+      },
       type: "number",
       required: true,
     },
