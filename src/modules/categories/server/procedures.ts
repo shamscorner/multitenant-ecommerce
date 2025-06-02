@@ -4,10 +4,10 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 export const categoriesRouter = createTRPCRouter({
   getMany: baseProcedure.query(async ({ ctx }) => {
     const data = await ctx.db.find({
-      collection: 'categories',
+      collection: "categories",
       depth: 1, // populate subcategories
       pagination: false,
-      sort: 'name',
+      sort: "name",
       where: {
         parent: {
           exists: false,

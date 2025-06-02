@@ -4,7 +4,7 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
 
-import { categories } from './categories';
+import { categories } from "./categories";
 
 const seed = async () => {
   const payload = await getPayload({ config });

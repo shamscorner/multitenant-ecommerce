@@ -45,15 +45,15 @@ export const CategoriesSidebar = ({
 
       if (parentCategories && selectedCategory) {
         navigationPath = `/${selectedCategory.slug}/${category.slug}`;
-      } else if (category.slug === 'all') {
-        navigationPath = '/';
+      } else if (category.slug === "all") {
+        navigationPath = "/";
       } else {
         navigationPath = `/${category.slug}`;
       }
 
       router.push(navigationPath);
     } catch (error) {
-      console.error('Navigation error:', error);
+      console.error("Navigation error:", error);
     }
 
     handleOpenChange(false);
@@ -65,7 +65,7 @@ export const CategoriesSidebar = ({
     setSelectedCategory(null);
   };
 
-  const backgroundColor = selectedCategory?.color || 'white';
+  const backgroundColor = selectedCategory?.color || "white";
 
   return (
     <Sheet onOpenChange={onOpenChange} open={open}>

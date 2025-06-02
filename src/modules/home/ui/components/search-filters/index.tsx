@@ -17,7 +17,7 @@ export const SearchFilters = () => {
   const { data } = useSuspenseQuery(trpc.categories.getMany.queryOptions());
 
   const categoryParam = params.category as string | undefined;
-  const activeCategorySlug = categoryParam || 'all';
+  const activeCategorySlug = categoryParam || "all";
 
   const activeCategoryData = data.find((category) => category.slug === activeCategorySlug);
   const activeCategoryColor = activeCategoryData?.color || DEFAULT_BG_COLOR;

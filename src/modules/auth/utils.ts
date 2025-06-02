@@ -1,4 +1,4 @@
-import { cookies as getCookies } from 'next/headers';
+import { cookies as getCookies } from "next/headers";
 
 interface Props {
   prefix: string;
@@ -15,7 +15,7 @@ export const generateAuthCookie = async ({
     cookies.set({
       httpOnly: true,
       name: `${prefix}-token`, // payload-token by default
-      path: '/',
+      path: "/",
       value,
       // TODO: ensure cross-domain cookie sharing
       // sameSite: 'none',
@@ -23,7 +23,7 @@ export const generateAuthCookie = async ({
       // domain: ''
     });
   } catch (error) {
-    console.error('Error setting cookie:', error);
-    throw new Error('Failed to set authentication cookie');
+    console.error("Error setting cookie:", error);
+    throw new Error("Failed to set authentication cookie");
   }
 };

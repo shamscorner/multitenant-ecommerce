@@ -7,7 +7,7 @@ const Page = async () => {
   const session = await caller.auth.session();
 
   if(session.user) {
-    redirect('/');
+    redirect("/");
   }
 
   return <SignUpView />;
