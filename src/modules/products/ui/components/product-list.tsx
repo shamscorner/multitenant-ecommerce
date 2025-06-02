@@ -12,13 +12,12 @@ interface Props {
 }
 
 export const ProductList = ({ categorySlug }: Props) => {
-  const [filters] = useProductFilters();
+  const [ filters ] = useProductFilters();
 
   const trpc = useTRPC();
   const { data: products } = useSuspenseQuery(trpc.products.getMany.queryOptions({
     categorySlug,
-    minPrice: filters.minPrice,
-    maxPrice: filters.maxPrice
+    ...filters
   }));
 
   return (
@@ -32,7 +31,7 @@ export const ProductList = ({ categorySlug }: Props) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            Content here.
+            {product.price}
           </CardContent>
           <CardFooter className="flex-col gap-2">
             Footer
