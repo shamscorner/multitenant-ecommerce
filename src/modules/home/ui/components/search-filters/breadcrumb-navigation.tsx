@@ -13,18 +13,20 @@ export const BreadcrumbNavigation = ({
   activeCategoryName,
   activeSubCategoryName,
 }: Props) => {
-  if(!activeCategoryName || activeCategorySlug === 'all') return null;
+  if (!activeCategoryName || activeCategorySlug === 'all') return null;
 
   return (
     <Breadcrumb>
       <BreadcrumbList className="text-lg font-semibold">
         {activeSubCategoryName ? (
           <>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild className="underline">
-                <Link href={`/${activeCategorySlug}`}>{activeCategoryName}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+            {activeCategorySlug && (
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild className="underline">
+                  <Link href={`/${encodeURIComponent(activeCategorySlug)}`}>{activeCategoryName}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbPage>

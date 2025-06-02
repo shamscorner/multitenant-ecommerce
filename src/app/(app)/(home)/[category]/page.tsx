@@ -1,8 +1,8 @@
-interface Props {
+interface PageProps {
   params: Promise<{ category: string }>;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params }: PageProps) => {
   const { category } = await params;
 
   return (
