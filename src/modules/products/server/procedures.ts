@@ -27,7 +27,7 @@ export const productsRouter = createTRPCRouter({
 
         const formattedCategoriesData = getFormattedSubcategories(categoriesData);
         const parentCategory = formattedCategoriesData[0];
-        const subcategoriesSlug = [];
+        const subcategoriesSlug: string[] = [];
 
         if(parentCategory) {
           subcategoriesSlug.push(
