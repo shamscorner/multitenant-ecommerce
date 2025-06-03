@@ -5,6 +5,7 @@ import { InboxIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LIMIT } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 
 import { useProductFilters } from "../../hooks/use-product-filters";
@@ -13,9 +14,11 @@ import { ProductCard, ProductCardSkeleton } from "./product-card";
 
 interface Props {
   categorySlug?: string;
+  tenantSlug?: string;
+  narrowView?: boolean;
 }
 
-export const ProductList = ({ categorySlug }: Props) => {
+export const ProductList = ({ categorySlug, tenantSlug, narrowView }: Props) => {
   const [ filters ] = useProductFilters();
 
   const trpc = useTRPC();
@@ -27,6 +30,7 @@ export const ProductList = ({ categorySlug }: Props) => {
   } = useSuspenseInfiniteQuery(trpc.products.getMany.infiniteQueryOptions({
     ...filters,
     categorySlug,
+    tenantSlug,
     limit: DEFAULT_LIMIT,
   }, {
     getNextPageParam: (lastPage) => lastPage.docs.length > 0 ? lastPage.nextPage : undefined,
@@ -43,15 +47,18 @@ export const ProductList = ({ categorySlug }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+      <div className={cn(
+        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
+        narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
+      )}>
         {products?.pages.flatMap((page) => page.docs).map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
             name={product.name}
             imageUrl={product.image?.url}
-            authorUsername="antonio"
-            authorImageUrl={undefined}
+            tenantSlug={product.tenant?.slug}
+            tenantImageUrl={product.tenant?.image?.url}
             reviewRating={3}
             reviewCount={5}
             price={product.price}
@@ -77,9 +84,12 @@ export const ProductList = ({ categorySlug }: Props) => {
   );
 };
 
-export const ProductListLoadingSkeleton = () => {
+export const ProductListLoadingSkeleton = ({ narrowView }: Props) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+    <div className={cn(
+      "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
+      narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
+    )}>
       {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
         <ProductCardSkeleton key={index} />
       ))}
