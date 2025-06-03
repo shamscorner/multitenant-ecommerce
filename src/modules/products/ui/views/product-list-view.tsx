@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { FallbackError } from "@/components/fallback-error";
+
 import { ProductFilters } from "../components/product-filters";
 import { ProductList, ProductListLoadingSkeleton } from "../components/product-list";
 import { ProductSort } from "../components/product-sort";
@@ -24,7 +26,9 @@ export const ProductListView = ({ categorySlug, tenantSlug, narrowView }: Props)
           <ProductFilters />
         </div>
         <div className="lg:col-span-4 xl:col-span-6">
-          <ErrorBoundary fallback={<div>Something went wrong while loading categories!</div>}>
+          <ErrorBoundary
+            fallback={<FallbackError message="Something went wrong while loading!" />}
+          >
             <Suspense fallback={<ProductListLoadingSkeleton narrowView={narrowView} />}>
               <ProductList
                 categorySlug={categorySlug}

@@ -30,7 +30,9 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   const router = useRouter();
 
-  const handleUserClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleUserClick = (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     router.push(generateTenantURL(tenantSlug));
@@ -56,6 +58,11 @@ export const ProductCard = ({
               onClick={handleUserClick}
               role="button"
               tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleUserClick(e);
+                }
+              }}
             >
               {tenantImageUrl && (
                 <Image

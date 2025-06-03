@@ -25,7 +25,10 @@ export const Navbar = ({ slug }: Props) => {
               width={32}
               height={32}
               className="rounded-full object-cover border shrink-0 size-[32px]"
-              alt={slug}
+              alt={tenant.name ? `${tenant.name} logo` : `${slug} tenant logo`}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
             />
           )}
           <p className="text-xl">{tenant.name}</p>

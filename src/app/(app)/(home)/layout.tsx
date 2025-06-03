@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { FallbackError } from "@/components/fallback-error";
 import { Footer } from "@/modules/home/ui/components/footer";
 import { Navbar } from "@/modules/home/ui/components/navbar";
 import { SearchFilters, SearchFiltersLoadingSkeleton } from "@/modules/home/ui/components/search-filters";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
-
 
 interface Props {
   children: React.ReactNode;
@@ -18,7 +18,9 @@ const Layout = async ({ children }: Props) => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <HydrateClient>
-        <ErrorBoundary fallback={<div>Something went wrong while loading!</div>}>
+        <ErrorBoundary
+          fallback={<FallbackError message="Something went wrong while loading!" />}
+        >
           <Suspense fallback={<SearchFiltersLoadingSkeleton />}>
             <SearchFilters />
           </Suspense>

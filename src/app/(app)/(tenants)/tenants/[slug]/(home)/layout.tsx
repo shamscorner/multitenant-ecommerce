@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { FallbackError } from "@/components/fallback-error";
 import { SearchFiltersLoadingSkeleton } from "@/modules/home/ui/components/search-filters";
 import { Footer } from "@/modules/tenants/ui/components/footer";
 import { Navbar } from "@/modules/tenants/ui/components/navbar";
@@ -22,7 +23,9 @@ const Layout = async ({ params, children }: Props) => {
   return (
     <div className="min-h-screen flex flex-col">
       <HydrateClient>
-        <ErrorBoundary fallback={<div>Something went wrong while loading!</div>}>
+        <ErrorBoundary
+          fallback={<FallbackError message="Something went wrong while loading!" />}
+        >
           <Suspense fallback={<SearchFiltersLoadingSkeleton />}>
             <Navbar slug={slug} />
           </Suspense>
