@@ -6,7 +6,7 @@ import { ProductList, ProductListLoadingSkeleton } from "../components/product-l
 import { ProductSort } from "../components/product-sort";
 
 interface Props {
-  categorySlug: string;
+  categorySlug?: string;
 }
 
 export const ProductListView = ({ categorySlug }: Props) => {
