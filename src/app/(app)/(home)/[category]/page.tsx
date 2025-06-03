@@ -1,5 +1,6 @@
 import type { SearchParams } from "nuqs";
 
+import { DEFAULT_LIMIT } from "@/constants";
 import { loadProductFilters } from "@/modules/products/searchParams";
 import { ProductListView } from "@/modules/products/ui/views/product-list-view";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
@@ -13,7 +14,11 @@ const Page = async ({ params, searchParams }: PageProps) => {
   const { category } = await params;
   const filters = await loadProductFilters(searchParams);
 
-  prefetch(trpc.products.getMany.queryOptions({ categorySlug: category, ...filters }));
+  prefetch(trpc.products.getMany.infiniteQueryOptions({
+    ...filters,
+    categorySlug: category,
+    limit: DEFAULT_LIMIT
+  }));
 
   return (
     <HydrateClient>
