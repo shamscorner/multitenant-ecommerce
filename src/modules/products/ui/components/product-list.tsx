@@ -1,11 +1,15 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { InboxIcon } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { DEFAULT_LIMIT } from "@/constants";
 import { useTRPC } from "@/trpc/client";
 
 import { useProductFilters } from "../../hooks/use-product-filters";
+
+import { ProductCard, ProductCardSkeleton } from "./product-card";
 
 interface Props {
   categorySlug?: string;
@@ -15,37 +19,70 @@ export const ProductList = ({ categorySlug }: Props) => {
   const [ filters ] = useProductFilters();
 
   const trpc = useTRPC();
-  const { data: products } = useSuspenseQuery(trpc.products.getMany.queryOptions({
+  const {
+    data: products,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSuspenseInfiniteQuery(trpc.products.getMany.infiniteQueryOptions({
+    ...filters,
     categorySlug,
-    ...filters
+    limit: DEFAULT_LIMIT,
+  }, {
+    getNextPageParam: (lastPage) => lastPage.docs.length > 0 ? lastPage.nextPage : undefined,
   }));
 
+  if (products.pages?.[0]?.docs.length === 0) {
+    return (
+      <div className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
+        <InboxIcon />
+        <p className="text-base font-medium">No products found</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-      {products.docs.map((product) => (
-        <Card key={product.id} className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>{product.name}</CardTitle>
-            <CardDescription>
-              {product.description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {product.price}
-          </CardContent>
-          <CardFooter className="flex-col gap-2">
-            Footer
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {products?.pages.flatMap((page) => page.docs).map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            imageUrl={product.image?.url}
+            authorUsername="antonio"
+            authorImageUrl={undefined}
+            reviewRating={3}
+            reviewCount={5}
+            price={product.price}
+          />
+        ))}
+      </div>
+
+      <div className="flex justify-center pt-10">
+        { hasNextPage && (
+          <Button
+            type="button"
+            variant="reverse"
+            size="lg"
+            disabled={isFetchingNextPage}
+            className="bg-white"
+            onClick={() => fetchNextPage()}
+          >
+            Load more
+          </Button>
+        )}
+      </div>
+    </>
   );
 };
 
 export const ProductListLoadingSkeleton = () => {
   return (
-    <div>
-      Loading...
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+      {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
+        <ProductCardSkeleton key={index} />
+      ))}
     </div>
   );
 };
