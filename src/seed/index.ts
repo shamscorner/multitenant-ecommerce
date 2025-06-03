@@ -13,9 +13,9 @@ const seed = async () => {
   const adminTenant = await payload.create({
     collection: "tenants",
     data: {
-      name: "admin",
-      slug: "admin",
-      stripeAccountId: "admin",
+      name: process.env.ADMIN_TENANT_USERNAME || "admin",
+      slug: process.env.ADMIN_TENANT_SLUG || "admin",
+      stripeAccountId: process.env.ADMIN_STRIPE_ACCOUNT_ID || "admin",
     },
   });
 
@@ -23,10 +23,10 @@ const seed = async () => {
   await payload.create({
     collection: "users",
     data: {
-      email: "admin@shamsroad.com",
-      password: "This@123",
+      email: process.env.ADMIN_TENANT_EMAIL || "admin@shamsroad.com",
+      password: process.env.ADMIN_TENANT_PASSWORD || "This@123",
       roles: ["super-admin"],
-      username: "admin",
+      username: process.env.ADMIN_TENANT_USERNAME || "admin",
       tenants: [
         {
           tenant: adminTenant.id,
