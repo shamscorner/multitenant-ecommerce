@@ -1,6 +1,7 @@
 "use client";
 
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { InboxIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LIMIT } from "@/constants";
@@ -8,7 +9,7 @@ import { useTRPC } from "@/trpc/client";
 
 import { useProductFilters } from "../../hooks/use-product-filters";
 
-import { ProductCard } from "./product-card";
+import { ProductCard, ProductCardSkeleton } from "./product-card";
 
 interface Props {
   categorySlug?: string;
@@ -30,6 +31,15 @@ export const ProductList = ({ categorySlug }: Props) => {
   }, {
     getNextPageParam: (lastPage) => lastPage.docs.length > 0 ? lastPage.nextPage : undefined,
   }));
+
+  if (products.pages?.[0]?.docs.length === 0) {
+    return (
+      <div className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
+        <InboxIcon />
+        <p className="text-base font-medium">No products found</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -69,8 +79,10 @@ export const ProductList = ({ categorySlug }: Props) => {
 
 export const ProductListLoadingSkeleton = () => {
   return (
-    <div>
-      Loading...
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+      {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
+        <ProductCardSkeleton key={index} />
+      ))}
     </div>
   );
 };
