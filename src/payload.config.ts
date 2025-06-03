@@ -1,6 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
+import { multiTenantPlugin } from "@payloadcms/plugin-multi-tenant";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import path from "path";
 import { buildConfig } from "payload";
@@ -11,6 +12,7 @@ import { Categories } from "./collections/Categories";
 import { Media } from "./collections/Media";
 import { Products } from "./collections/Products";
 import { Tags } from "./collections/Tags";
+import { Tenants } from "./collections/Tenants";
 import { Users } from "./collections/Users";
 
 const filename = fileURLToPath(import.meta.url);
@@ -23,18 +25,27 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Media, Categories, Products, Tags],
+  collections: [Users, Media, Categories, Products, Tags, Tenants],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
   }),
   editor: lexicalEditor(),
   plugins: [
     payloadCloudPlugin(),
+    multiTenantPlugin({
+      collections: {
+        products: {},
+      },
+      tenantsArrayField: {
+        includeDefaultField: false,
+      },
+      userHasAccessToAllTenants: (user) => Boolean(user?.roles?.includes("super-admin"))
+    }),
     // storage-adapter-placeholder
   ],
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
-  },
+  }
 });

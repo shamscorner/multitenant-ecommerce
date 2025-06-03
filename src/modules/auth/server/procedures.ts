@@ -12,26 +12,26 @@ const login = async (
   input: { email: string; password: string }
 ) => {
   const data = await ctx.db.login({
-      collection: "users",
-      data: {
-        email: input.email,
-        password: input.password,
-      }
-    });
-
-    if(!data.token) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid email or password",
-      });
+    collection: "users",
+    data: {
+      email: input.email,
+      password: input.password,
     }
+  });
 
-    await generateAuthCookie({
-      prefix: ctx.db.config.cookiePrefix,
-      value: data.token
+  if(!data.token) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Invalid email or password",
     });
+  }
 
-    return data;
+  await generateAuthCookie({
+    prefix: ctx.db.config.cookiePrefix,
+    value: data.token
+  });
+
+  return data;
 };
 
 export const authRouter = createTRPCRouter({
@@ -65,12 +65,26 @@ export const authRouter = createTRPCRouter({
         });
       }
 
+      const tenant = await ctx.db.create({
+        collection: "tenants",
+        data: {
+          name: input.username,
+          slug: input.username,
+          stripeAccountId: "test"
+        }
+      });
+
       await ctx.db.create({
         collection: "users",
         data: {
           email: input.email,
           password: input.password, // This will be hashed by payload
           username: input.username,
+          tenants: [
+            {
+              tenant: tenant.id,
+            }
+          ]
         }
       });
 
