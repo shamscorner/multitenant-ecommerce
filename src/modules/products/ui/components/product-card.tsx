@@ -1,16 +1,18 @@
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { generateTenantURL } from "@/lib/utils";
 
 interface ProductCardProps {
   id: string;
   name: string;
   imageUrl?: string | null;
-  authorUsername: string;
-  authorImageUrl?: string | null;
+  tenantSlug: string;
+  tenantImageUrl?: string | null;
   reviewRating: number;
   reviewCount: number;
   price: number;
@@ -20,12 +22,20 @@ export const ProductCard = ({
   id,
   name,
   imageUrl,
-  authorUsername,
-  authorImageUrl,
+  tenantSlug,
+  tenantImageUrl,
   reviewRating,
   reviewCount,
   price,
 }: ProductCardProps) => {
+  const router = useRouter();
+
+  const handleUserClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(generateTenantURL(tenantSlug));
+  };
+
   return (
     <Link href={`/products/${id}`} className="group">
       <Card className="bg-white h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
@@ -41,17 +51,22 @@ export const ProductCard = ({
           <CardTitle>{name}</CardTitle>
           <CardDescription className="mt-4">
             {/* TODO: Redirect to user shop */}
-            <div className="flex items-center gap-2" onClick={() => {}}>
-              {authorImageUrl && (
+            <div
+              className="flex items-center gap-2"
+              onClick={handleUserClick}
+              role="button"
+              tabIndex={0}
+            >
+              {tenantImageUrl && (
                 <Image
-                  alt={authorUsername}
-                  src={authorImageUrl}
+                  alt={tenantSlug}
+                  src={tenantImageUrl}
                   width={16}
                   height={16}
-                  className="rounded-full border shrink-0 size-[16px]"
+                  className="rounded-full object-cover border shrink-0 size-[16px]"
                 />
               )}
-              <p className="text-sm underline font-medium">{authorUsername}</p>
+              <p className="text-sm underline font-medium">{tenantSlug}</p>
             </div>
 
             {reviewCount > 0 && (

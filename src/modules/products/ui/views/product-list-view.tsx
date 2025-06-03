@@ -7,9 +7,11 @@ import { ProductSort } from "../components/product-sort";
 
 interface Props {
   categorySlug?: string;
+  tenantSlug?: string;
+  narrowView?: boolean;
 }
 
-export const ProductListView = ({ categorySlug }: Props) => {
+export const ProductListView = ({ categorySlug, tenantSlug, narrowView }: Props) => {
   return (
     <div className="px-4 lg:px-12 py-8 flex flex-col gap-4">
       <div className="flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-y-0 justify-between">
@@ -23,8 +25,12 @@ export const ProductListView = ({ categorySlug }: Props) => {
         </div>
         <div className="lg:col-span-4 xl:col-span-6">
           <ErrorBoundary fallback={<div>Something went wrong while loading categories!</div>}>
-            <Suspense fallback={<ProductListLoadingSkeleton />}>
-              <ProductList categorySlug={categorySlug} />
+            <Suspense fallback={<ProductListLoadingSkeleton narrowView={narrowView} />}>
+              <ProductList
+                categorySlug={categorySlug}
+                tenantSlug={tenantSlug}
+                narrowView={narrowView}
+              />
             </Suspense>
           </ErrorBoundary>
         </div>
