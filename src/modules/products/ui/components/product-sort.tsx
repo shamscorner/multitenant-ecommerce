@@ -24,8 +24,8 @@ const SortButton = ({ label, isActive, onClick }: SortButtonProps) => (
 	<Button
 		size="sm"
 		className={cn(
-			"rounded-full bg-white",
-			!isActive && "bg-transparent"
+			"rounded-full",
+			isActive ? "bg-white" : "bg-transparent"
 		)}
 		variant="reverse"
 		onClick={onClick}

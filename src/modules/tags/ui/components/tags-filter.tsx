@@ -8,7 +8,7 @@ import { useTRPC } from "@/trpc/client";
 
 interface TagsFilterProps {
   value?: string[] | null;
-  onChange?: (value: string[] | string) => void;
+  onChange?: (value: string[]) => void;
 }
 
 export const TagsFilter = ({ value, onChange }: TagsFilterProps) => {
@@ -16,6 +16,7 @@ export const TagsFilter = ({ value, onChange }: TagsFilterProps) => {
   const {
     data: tags,
     isLoading,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage
@@ -39,6 +40,8 @@ export const TagsFilter = ({ value, onChange }: TagsFilterProps) => {
         <div className="flex items-center justify-center p-4">
           <LoaderIcon className="size-4 animate-spin" />
         </div>
+      ) : error ? (
+        <div className="text-red-500 p-4">Failed to load tags</div>
       ) : (
         tags?.pages.map((page) => (
           page.docs.map((tag) => (

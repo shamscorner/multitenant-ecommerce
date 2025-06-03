@@ -17,17 +17,16 @@ export const productsRouter = createTRPCRouter({
     }))
     .query(async ({ ctx, input }) => {
       const where: Where = {};
-      let sort: Sort = "-createdAt"; // default sort by createdAt descending
 
-      if(input.sort === "trending") {
-        sort = "name";
-      }
-      if(input.sort === "hot_and_new") {
-        sort = "+createdAt";
-      }
-      if(input.sort === "curated") {
-        sort = "-createdAt";
-      }
+      const sortMap: Record<typeof sortValues[number], Sort> = {
+        trending: "name",
+        hot_and_new: "+createdAt",
+        curated: "-createdAt",
+      };
+
+      const sort: Sort = input.sort
+        ? (sortMap[input.sort] ?? "-createdAt")
+        : "-createdAt";
 
       if (input.minPrice) {
         where.price = {
