@@ -1,6 +1,10 @@
 import type { CollectionConfig } from "payload";
 
 export const Products: CollectionConfig = {
+  slug: "products",
+  admin: {
+    useAsTitle: "name",
+  },
   fields: [
     {
       name: "name",
@@ -26,6 +30,12 @@ export const Products: CollectionConfig = {
       hasMany: false,
     },
     {
+      name: "tags",
+      type: "relationship",
+      relationTo: "tags",
+      hasMany: true,
+    },
+    {
       name: "image",
       type: "upload",
       relationTo: "media",
@@ -44,5 +54,4 @@ export const Products: CollectionConfig = {
       defaultValue: "30-day",
     }
   ],
-  slug: "products",
 };
