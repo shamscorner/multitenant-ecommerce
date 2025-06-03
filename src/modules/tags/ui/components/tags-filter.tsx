@@ -48,7 +48,7 @@ export const TagsFilter = ({ value, onChange }: TagsFilterProps) => {
             >
               <Label
                 htmlFor={`tags-filter-checkbox-${tag.id}`}
-                className="font-medium"
+                className="font-medium flex-1"
               >
                 {tag.name}
               </Label>
