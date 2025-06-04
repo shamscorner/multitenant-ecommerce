@@ -40,7 +40,7 @@ export const ProductCard = ({
 
   return (
     <Link href={`${generateTenantURL(tenantSlug)}/products/${id}`} className="group">
-      <Card className="bg-white overflow-hidden h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
+      <Card className="bg-white gap-0 overflow-hidden h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
         <div className="relative aspect-square">
           <Image
             alt={name}
@@ -49,7 +49,7 @@ export const ProductCard = ({
             className="object-cover"
           />
         </div>
-        <CardHeader className="border-y py-4 flex-1">
+        <CardHeader className="border-y py-6 flex-1">
           <CardTitle>{name}</CardTitle>
           <CardDescription className="mt-4">
             {/* TODO: Redirect to user shop */}
@@ -86,7 +86,7 @@ export const ProductCard = ({
             )}
           </CardDescription>
         </CardHeader>
-        <CardFooter>
+        <CardFooter className="pt-6">
           <Badge>
             {new Intl.NumberFormat("en-US", {
               style: "currency",

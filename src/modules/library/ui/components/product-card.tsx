@@ -28,7 +28,7 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   return (
     <Link prefetch href={`/library/${id}`}>
-      <Card className="bg-white overflow-hidden h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
+      <Card className="bg-white gap-0 overflow-hidden h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
         <div className="relative aspect-square">
           <Image
             alt={name}
@@ -37,7 +37,7 @@ export const ProductCard = ({
             className="object-cover"
           />
         </div>
-        <CardHeader className="flex-1">
+        <CardHeader className="flex-1 pt-4">
           <CardTitle className="text-lg font-medium line-clamp-4">{name}</CardTitle>
           <CardDescription>
             <div className="flex items-center gap-2">
