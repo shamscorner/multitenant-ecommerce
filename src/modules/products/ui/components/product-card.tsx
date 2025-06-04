@@ -46,7 +46,7 @@ export const ProductCard = ({
             alt={name}
             fill
             src={imageUrl || "/placeholder.png"}
-            className="object-cover"
+            className="object-cover rounded-tl-base rounded-tr-base"
           />
         </div>
         <CardHeader className="border-y py-4 flex-1">
