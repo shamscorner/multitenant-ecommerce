@@ -31,6 +31,8 @@ export const StarPicker = ({
         disabled && "opacity-50 cursor-not-allowed",
         className,
       )}
+      role="radiogroup"
+      aria-label="Rating"
     >
       {[1, 2, 3, 4, 5].map((star) => (
         <button
@@ -44,6 +46,9 @@ export const StarPicker = ({
           onClick={() => handleChange(star)}
           onMouseEnter={() => setHoverValue(star)}
           onMouseLeave={() => setHoverValue(0)}
+          role="radio"
+          aria-checked={value === star}
+          aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
         >
           <StarIcon
             className={cn(
