@@ -39,7 +39,7 @@ export const ProductCard = ({
   };
 
   return (
-    <Link href={`/products/${id}`} className="group">
+    <Link href={`${generateTenantURL(tenantSlug)}/products/${id}`} className="group">
       <Card className="bg-white h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
         <div className="relative aspect-square">
           <Image
