@@ -7,14 +7,14 @@ interface CheckoutSidebarProps {
   total: number;
   onCheckout: () => void;
   isCanceled?: boolean;
-  isPending?: boolean;
+  disabled?: boolean;
 }
 
 export const CheckoutSidebar = ({
   total,
   onCheckout,
   isCanceled,
-  isPending,
+  disabled,
 }: CheckoutSidebarProps) => {
   return (
     <div className="border rounded-md overflow-hidden bg-white flex flex-col">
@@ -26,7 +26,7 @@ export const CheckoutSidebar = ({
       </div>
       <div className="p-4 flex items-center justify-center">
         <Button
-          disabled={isPending}
+          disabled={disabled}
           onClick={onCheckout}
           size="lg"
           className="w-full"
