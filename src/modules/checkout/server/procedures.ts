@@ -60,6 +60,13 @@ export const checkoutRouter = createTRPCRouter({
         });
       }
 
+      if (!tenant.stripeAccountId) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Tenant has not configured Stripe account",
+        });
+      }
+
       // TODO: Throw error if stripe details not submitted
 
       const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =

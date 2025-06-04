@@ -116,7 +116,7 @@ export async function POST(req: Request) {
           return payload.create({
             collection: "orders",
             data: {
-              stripeCheckoutSessionId: item.id,
+              stripeCheckoutSessionId: session.id,
               user: user.id,
               product: item.price.product.metadata.id,
               name: item.price.product.name,
@@ -124,9 +124,22 @@ export async function POST(req: Request) {
           });
         });
 
-        const createdOrders = await Promise.all(orderCreationPromises);
+        const orderResults = await Promise.allSettled(orderCreationPromises);
 
-        console.log(`✅ Successfully created ${createdOrders.length} orders for session: ${session.id}`);
+        const createdOrders = orderResults
+          .filter((result): result is PromiseFulfilledResult<any> => result.status === "fulfilled")
+          .map((result) => result.value);
+
+        const failedOrders = orderResults
+          .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+          .map((result) => result.reason);
+
+        if (failedOrders.length > 0) {
+          console.error(`⚠️ Failed to create ${failedOrders.length} orders:`, failedOrders.map(f => f.reason));
+        }
+
+        console.log(`✅ Successfully created ${createdOrders.length}/${lineItems.length} orders for session: ${session.id}`);
+
         break;
       }
 
