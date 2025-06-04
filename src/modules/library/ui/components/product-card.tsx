@@ -1,11 +1,11 @@
+import React from "react";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { generateTenantURL } from "@/lib/utils";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+// TODO: Add real ratings
 
 interface ProductCardProps {
   id: string;
@@ -15,7 +15,6 @@ interface ProductCardProps {
   tenantImageUrl?: string | null;
   reviewRating: number;
   reviewCount: number;
-  price: number;
 };
 
 export const ProductCard = ({
@@ -26,20 +25,9 @@ export const ProductCard = ({
   tenantImageUrl,
   reviewRating,
   reviewCount,
-  price,
 }: ProductCardProps) => {
-  const router = useRouter();
-
-  const handleUserClick = (
-    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    router.push(generateTenantURL(tenantSlug));
-  };
-
   return (
-    <Link href={`${generateTenantURL(tenantSlug)}/products/${id}`} className="group">
+    <Link href={`/library/${id}`}>
       <Card className="bg-white overflow-hidden h-full pt-0 shadow-transparent hover:shadow-shadow transition-shadow">
         <div className="relative aspect-square">
           <Image
@@ -49,33 +37,21 @@ export const ProductCard = ({
             className="object-cover"
           />
         </div>
-        <CardHeader className="border-y py-4 flex-1">
-          <CardTitle>{name}</CardTitle>
-          <CardDescription className="mt-4">
-            {/* TODO: Redirect to user shop */}
-            <div
-              className="flex items-center gap-2"
-              onClick={handleUserClick}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleUserClick(e);
-                }
-              }}
-            >
+        <CardHeader className="flex-1">
+          <CardTitle className="text-lg font-medium line-clamp-4">{name}</CardTitle>
+          <CardDescription>
+            <div className="flex items-center gap-2">
               {tenantImageUrl && (
                 <Image
                   alt={tenantSlug}
                   src={tenantImageUrl}
                   width={16}
                   height={16}
-                  className="rounded-full object-cover border shrink-0 size-[16px]"
+                  className="rounded-full border shrink-0 size-[16px]"
                 />
               )}
               <p className="text-sm underline font-medium">{tenantSlug}</p>
             </div>
-
             {reviewCount > 0 && (
               <div className="flex items-center gap-1 mt-4">
                 <StarIcon className="size-3.5 fill-black" />
@@ -86,15 +62,6 @@ export const ProductCard = ({
             )}
           </CardDescription>
         </CardHeader>
-        <CardFooter>
-          <Badge>
-            {new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              maximumFractionDigits: 0,
-            }).format(Number(price))}
-          </Badge>
-        </CardFooter>
       </Card>
     </Link>
   );
