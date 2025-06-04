@@ -109,7 +109,6 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                   </Button>
                   <Button
                     variant="reverse"
-                    disabled={false}
                     className="bg-white"
                     onClick={() => {}}
                   >

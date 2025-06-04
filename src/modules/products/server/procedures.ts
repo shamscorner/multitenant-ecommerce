@@ -22,6 +22,10 @@ export const productsRouter = createTRPCRouter({
         depth: 2, // Load the "product.image", "product.tenant", and "product.tenant.image"
       });
 
+      if(!product) {
+        throw new Error(`Product with ID ${input.id} not found.`);
+      }
+
       return {
         ...product,
         image: product.image as Media | null,

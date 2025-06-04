@@ -9,10 +9,11 @@ export function generateTenantURL(tenantSlug: string) {
   return `/tenants/${tenantSlug}`;
 };
 
-export function formatCurrency(value: number | string) {
-  return new Intl.NumberFormat("en-US", {
+export function formatCurrency(value: number | string, currency = "USD", locale = "en-US") {
+  if(value === "") return "$0";
+  return new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: "USD",
+    currency: currency,
     maximumFractionDigits: 0,
   }).format(Number(value));
 };
