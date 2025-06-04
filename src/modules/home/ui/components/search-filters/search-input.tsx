@@ -44,7 +44,7 @@ export const SearchInput = ({ disabled }: Props) => {
           variant="reverse"
           asChild
         >
-          <Link href="/library">
+          <Link prefetch href="/library">
             <BookmarkCheckIcon />
             Library
           </Link>
