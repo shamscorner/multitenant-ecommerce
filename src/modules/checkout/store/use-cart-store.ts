@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import { CART_STORAGE_KEY } from "@/modules/home/constants";
+
 interface TenantCart {
   productIds: string[];
 };
@@ -24,7 +26,9 @@ export const useCartStore = create<CartState>()(
             ...state.tenantCarts,
             [tenantSlug]: {
               productIds: [
-                ...(state.tenantCarts[tenantSlug]?.productIds || []),
+                ...(state.tenantCarts[tenantSlug]?.productIds || []).filter(
+                  id => id !== productId
+                ),
                 productId,
               ]
             }
@@ -35,9 +39,9 @@ export const useCartStore = create<CartState>()(
           tenantCarts: {
             ...state.tenantCarts,
             [tenantSlug]: {
-              productIds: state.tenantCarts[tenantSlug]?.productIds.filter(
+              productIds: (state.tenantCarts[tenantSlug]?.productIds || []).filter(
                 (id) => id !== productId
-              ) || [],
+              ),
             }
           }
         })),
@@ -58,7 +62,7 @@ export const useCartStore = create<CartState>()(
         get().tenantCarts[tenantSlug]?.productIds || [],
     }),
     {
-      name: "shamsroad-cart",
+      name: CART_STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
     },
   ),

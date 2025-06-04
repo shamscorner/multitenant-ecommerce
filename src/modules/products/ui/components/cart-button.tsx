@@ -9,14 +9,15 @@ interface Props {
 
 export const CartButton = ({ tenantSlug, productId, }: Props) => {
   const cart = useCart(tenantSlug);
+  const isInCart = cart.isProductInCart(productId);
 
   return (
     <Button
       variant="reverse"
-      className={cn("flex-1", cart.isProductInCart(productId) && "bg-white")}
+      className={cn("flex-1", isInCart && "bg-white")}
       onClick={() => cart.toggleProduct(productId)}
     >
-      {cart.isProductInCart(productId)
+      {isInCart
         ? "Remove from cart"
         : "Add to cart"
       }

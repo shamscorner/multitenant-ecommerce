@@ -23,12 +23,21 @@ export const checkoutRouter = createTRPCRouter({
       });
 
       if (data.totalDocs !== input.ids.length) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Products not found" });
+        const foundIds = data.docs.map(doc => doc.id);
+        const missingIds = input.ids.filter(id => !foundIds.includes(id));
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Products not found: ${missingIds.join(", ")}`
+        });
       }
 
       const totalPrice = data.docs.reduce((acc, product) => {
         const price = Number(product.price);
-        return acc + (isNaN(price) ? 0 : price);
+        if (isNaN(price)) {
+          console.warn(`Invalid price for product ${product.id}: ${product.price}`);
+          return acc;
+        }
+        return acc + price;
       }, 0);
 
       return {
