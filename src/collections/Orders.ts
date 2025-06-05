@@ -42,5 +42,12 @@ export const Orders: CollectionConfig = {
         description: "Stripe Checkout Session ID for the order",
       }
     },
+    {
+      name: "stripeAccountId",
+      type: "text",
+      admin: {
+        description: "Stripe account associated with the order"
+      }
+    },
   ],
 };

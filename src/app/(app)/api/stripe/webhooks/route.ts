@@ -61,6 +61,7 @@ export async function POST(req: Request) {
 
   const permittedEvents: string[] = [
     "checkout.session.completed",
+    "account.updated",
   ];
 
   if (!permittedEvents.includes(event.type)) {
@@ -95,7 +96,8 @@ export async function POST(req: Request) {
         // Retrieve expanded session with line items
         const expandedSession = await stripe.checkout.sessions.retrieve(
           session.id,
-          { expand: ["line_items.data.price.product"] }
+          { expand: ["line_items.data.price.product"] },
+          { stripeAccount: event.account }
         );
 
         const lineItems = expandedSession.line_items?.data as ExpandedLineItem[] | undefined;
@@ -117,6 +119,7 @@ export async function POST(req: Request) {
             collection: "orders",
             data: {
               stripeCheckoutSessionId: session.id,
+              stripeAccountId: event.account,
               user: user.id,
               product: item.price.product.metadata.id,
               name: item.price.product.name,
@@ -139,6 +142,48 @@ export async function POST(req: Request) {
         }
 
         console.log(`✅ Successfully created ${createdOrders.length}/${lineItems.length} orders for session: ${session.id}`);
+
+        break;
+      }
+
+      case "account.updated": {
+        const account = event.data.object as Stripe.Account;
+
+        // Validate account ID exists
+        if (!account.id) {
+          throw new WebhookError("Missing account ID in Stripe account object", 422);
+        }
+
+        console.log(`🔄 Processing account update for Stripe account: ${account.id}`);
+
+        // Find and update the tenant
+        const updateResult = await payload.update({
+          collection: "tenants",
+          where: {
+            stripeAccountId: {
+              equals: account.id,
+            },
+          },
+          data: {
+            stripeDetailsSubmitted: account.details_submitted,
+          },
+        });
+
+        if (!updateResult.docs.length) {
+          console.warn(`⚠️ No tenant found with Stripe account ID: ${account.id}`);
+          throw new WebhookError(`Tenant not found for Stripe account: ${account.id}`, 404);
+        }
+
+        console.log(`✅ Successfully updated ${updateResult.docs.length} tenant(s) for account: ${account.id}`, {
+          detailsSubmitted: account.details_submitted,
+          chargesEnabled: account.charges_enabled,
+          payoutsEnabled: account.payouts_enabled,
+          requirementsCount: {
+            currentlyDue: account.requirements?.currently_due?.length || 0,
+            eventuallyDue: account.requirements?.eventually_due?.length || 0,
+            pastDue: account.requirements?.past_due?.length || 0,
+          }
+        });
 
         break;
       }

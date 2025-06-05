@@ -10,7 +10,8 @@
     "lint": "next lint",
     "generate:types": "payload generate:types",
     "db:fresh": "payload migrate:fresh",
-    "db:seed": "bun run src/seed/index.ts"
+    "db:seed": "bun run src/seed/index.ts",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhooks"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
