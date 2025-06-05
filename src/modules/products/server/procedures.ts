@@ -4,7 +4,7 @@ import z from "zod";
 
 import { DEFAULT_LIMIT } from "@/constants";
 import { getFormattedSubcategories } from "@/modules/categories/utils";
-import { Media, Tenant } from "@/payload-types";
+import { Media, Review, Tenant } from "@/payload-types";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 import { sortValues } from "../searchParams";
@@ -56,12 +56,57 @@ export const productsRouter = createTRPCRouter({
         isPurchased = !!ordersData.docs[0];
       }
 
+      const reviews = await ctx.db.find({
+        collection: "reviews",
+        pagination: false,
+        where: {
+          product: {
+            equals: input.id,
+          },
+        },
+      });
+
+      // Calculate the average rating and distribution
+      const reviewRating =
+        reviews.docs.length > 0
+        ? reviews.docs.reduce((acc, review) => acc + review.rating, 0) / reviews.totalDocs
+        : 0;
+
+      const ratingDistribution: Record<number, number> = {
+        5: 0,
+        4: 0,
+        3: 0,
+        2: 0,
+        1: 0,
+      };
+
+      if (reviews.totalDocs > 0) {
+        reviews.docs.forEach((review) => {
+          const rating = review.rating;
+
+          if (rating >= 1 && rating <= 5) {
+            ratingDistribution[rating] = (ratingDistribution[rating] || 0) + 1;
+          }
+        });
+
+        Object.keys(ratingDistribution).forEach((key) => {
+          const rating = Number(key);
+          const count = ratingDistribution[rating] || 0;
+          ratingDistribution[rating] = Math.round(
+            (count / reviews.totalDocs) * 100,
+          );
+        });
+      }
+
       return {
         ...product,
         isPurchased,
         image: product.image as Media | null,
         cover: product.cover as Media | null,
         tenant: product.tenant as Tenant & { image: Media | null },
+        reviewRating,
+        reviewCount: reviews.totalDocs,
+        ratingDistribution,
       };
     }),
 
@@ -144,7 +189,8 @@ export const productsRouter = createTRPCRouter({
         };
       }
 
-      const data = await ctx.db.find({
+      // Fetch products with the specified filters and sorting
+      const productsData = await ctx.db.find({
         collection: "products",
         depth: 2, // populate category, image & tenant with tenant image
         where,
@@ -153,18 +199,52 @@ export const productsRouter = createTRPCRouter({
         limit: input.limit,
       });
 
+      // Fetch all reviews for all products in a single query
+      const productIds = productsData.docs.map((product) => product.id);
+      const allReviewsData = await ctx.db.find({
+        collection: "reviews",
+        depth: 0, // We want to just get ids, without populating
+        pagination: false,
+        where: {
+          product: {
+            in: productIds,
+          },
+        },
+      });
+
+      // Group reviews by product ID and calculate aggregations
+      const reviewsByProduct = allReviewsData.docs.reduce((acc, review) => {
+        const productId = review.product as string;
+        if (!acc[productId]) {
+          acc[productId] = [];
+        }
+        acc[productId].push(review);
+        return acc;
+      }, {} as Record<string, Review[]>);
+
+      // Map products and summarize reviews
+      const dataWithSummarizedReviews = productsData.docs.map((product) => {
+        const reviews = reviewsByProduct[product.id] || [];
+        const reviewCount = reviews.length;
+        const reviewRating = reviewCount === 0
+          ? 0
+          : reviews.reduce((acc, review) => acc + review.rating, 0) / reviewCount;
+
+        return {
+          ...product,
+          reviewCount,
+          reviewRating,
+        };
+      });
+
       return {
-        ...data,
-        docs: data.docs.map((doc) => {
-          const tenant = doc.tenant as Tenant;
+        ...productsData,
+        docs: dataWithSummarizedReviews.map((doc) => {
           return {
             ...doc,
             image: doc.image as Media,
             cover: doc.cover as Media,
-            tenant: {
-              ...tenant,
-              image: tenant.image as Media,
-            },
+            tenant: doc.tenant as Tenant & { image: Media | null },
           };
         }),
       };

@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import z from "zod";
 
 import { DEFAULT_LIMIT } from "@/constants";
-import { Media, Tenant } from "@/payload-types";
+import { Media, Review, Tenant } from "@/payload-types";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 export const libraryRouter = createTRPCRouter({
@@ -77,8 +77,8 @@ export const libraryRouter = createTRPCRouter({
         },
       });
 
+      // Fetch all products related to the orders in a single query
       const productIds = ordersData.docs.map((order) => order.product);
-
       const productsData = await ctx.db.find({
         collection: "products",
         pagination: false,
@@ -89,9 +89,46 @@ export const libraryRouter = createTRPCRouter({
         },
       });
 
+      // Fetch all reviews for all products in a single query
+      const allReviewsData = await ctx.db.find({
+        collection: "reviews",
+        depth: 0, // We want to just get ids, without populating
+        pagination: false,
+        where: {
+          product: {
+            in: productIds,
+          },
+        },
+      });
+
+      // Group reviews by product ID and calculate aggregations
+      const reviewsByProduct = allReviewsData.docs.reduce((acc, review) => {
+        const productId = review.product as string;
+        if (!acc[productId]) {
+          acc[productId] = [];
+        }
+        acc[productId].push(review);
+        return acc;
+      }, {} as Record<string, Review[]>);
+
+      // Map products and summarize reviews
+      const dataWithSummarizedReviews = productsData.docs.map((doc) => {
+        const reviews = reviewsByProduct[doc.id] || [];
+        const reviewCount = reviews.length;
+        const reviewRating = reviewCount === 0
+          ? 0
+          : reviews.reduce((acc, review) => acc + review.rating, 0) / reviewCount;
+
+        return {
+          ...doc,
+          reviewCount,
+          reviewRating,
+        };
+      });
+
       return {
         ...productsData,
-        docs: productsData.docs.map((doc) => ({
+        docs: dataWithSummarizedReviews.map((doc) => ({
           ...doc,
           image: doc.image as Media | null,
           tenant: doc.tenant as Tenant & { image: Media | null },
