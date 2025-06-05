@@ -10,7 +10,8 @@ export const Products: CollectionConfig = {
       if(isSuperAdmin(req.user)) return true;
       const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
       return tenant && !!tenant.stripeDetailsSubmitted;
-    }
+    },
+    delete: ({ req }) => isSuperAdmin(req.user),
     // other access rules are already handled by multiTenantPlugin
   },
   admin: {
@@ -78,6 +79,15 @@ export const Products: CollectionConfig = {
       admin: {
         description:
           "Protected content only visible to customers after purchase. Add product documentation, downloadable files, getting started guides, and bonus materials. Supports Markdown formatting"
+      },
+    },
+    {
+      name: "isArchived",
+      label: "Archive",
+      defaultValue: false,
+      type: "checkbox",
+      admin: {
+        description: "If checked, this product will be archived"
       },
     },
   ],
