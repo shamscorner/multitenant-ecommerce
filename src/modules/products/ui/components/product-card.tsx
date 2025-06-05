@@ -52,7 +52,6 @@ export const ProductCard = ({
         <CardHeader className="border-y py-6 flex-1">
           <CardTitle>{name}</CardTitle>
           <CardDescription className="mt-4">
-            {/* TODO: Redirect to user shop */}
             <div
               className="flex items-center gap-2"
               onClick={handleUserClick}
@@ -76,13 +75,15 @@ export const ProductCard = ({
               <p className="text-sm underline font-medium">{tenantSlug}</p>
             </div>
 
-            {reviewCount > 0 && (
+            {reviewCount > 0 ? (
               <div className="flex items-center gap-1 mt-4">
                 <StarIcon className="size-3.5 fill-black" />
                 <p className="text-sm font-medium">
                   {reviewRating} ({reviewCount})
                 </p>
               </div>
+            ) : (
+              <div className="mt-4" />
             )}
           </CardDescription>
         </CardHeader>

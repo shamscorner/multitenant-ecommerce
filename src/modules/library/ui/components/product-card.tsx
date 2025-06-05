@@ -5,8 +5,6 @@ import Link from "next/link";
 
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-// TODO: Add real ratings
-
 interface ProductCardProps {
   id: string;
   name: string;
@@ -52,14 +50,14 @@ export const ProductCard = ({
               )}
               <p className="text-sm underline font-medium">{tenantSlug}</p>
             </div>
-            {reviewCount > 0 && (
+            {reviewCount > 0 ? (
               <div className="flex items-center gap-1 mt-4">
                 <StarIcon className="size-3.5 fill-black" />
                 <p className="text-sm font-medium">
                   {reviewRating} ({reviewCount})
                 </p>
               </div>
-            )}
+            ) : (<div className="mt-4" />)}
           </CardDescription>
         </CardHeader>
       </Card>

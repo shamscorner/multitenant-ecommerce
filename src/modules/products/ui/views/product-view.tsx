@@ -1,13 +1,12 @@
 "use client";
 
-// TODO: Add real ratings
-
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { LinkIcon, StarIcon } from "lucide-react";
+import { CheckIcon, LinkIcon, StarIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { StarRating } from "@/components/star-rating";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +29,20 @@ interface ProductViewProps {
 export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
   const trpc = useTRPC();
   const { data: product } = useSuspenseQuery(trpc.products.getOne.queryOptions({ id: productId }));
+
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        setIsCopied(true);
+        toast.success("Link copied to clipboard!");
+        setTimeout(() => setIsCopied(false), 2000);
+      })
+      .catch(() => {
+        toast.error("Failed to copy link");
+      });
+  };
 
   return (
     <div className="px-4 lg:px-12 py-10">
@@ -72,23 +85,26 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
               </div>
 
               <div className="hidden lg:flex px-6 py-4 items-center justify-center">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-3">
                   <StarRating
-                    rating={4}
+                    rating={product.reviewRating}
                     iconClassName="size-4"
                   />
+                  <p className="text-base font-medium">
+                    {product.reviewCount} ratings
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <StarRating
-                  rating={4}
+                  rating={product.reviewRating}
                   iconClassName="size-4"
                 />
                 <p className="text-base font-medium">
-                  {5} ratings
+                  {product.reviewCount} ratings
                 </p>
               </div>
             </div>
@@ -116,9 +132,11 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                   <Button
                     variant="reverse"
                     className="bg-white"
-                    onClick={() => {}}
+                    disabled={isCopied}
+                    onClick={() => handleCopyLink()}
                   >
-                    <LinkIcon />
+                    {isCopied ? <CheckIcon /> : <LinkIcon />}
+                    <span className="sr-only">Copy product link</span>
                   </Button>
                 </div>
 
@@ -135,8 +153,8 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                   <h3 className="text-xl font-medium">Ratings</h3>
                   <div className="flex items-center gap-x-1 font-medium">
                     <StarIcon className="size-4 fill-black" />
-                    <p>({5})</p>
-                    <p className="text-base">{5} ratings</p>
+                    <p>({product.reviewRating})</p>
+                    <p className="text-base">{product.reviewCount} ratings</p>
                   </div>
                 </div>
                 <div
@@ -146,11 +164,11 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                     <Fragment key={stars}>
                       <div className="font-medium">{stars} {stars === 1 ? "star" : "stars"}</div>
                       <Progress
-                        value={25}
+                        value={product.ratingDistribution[stars] || 0}
                         className="h-[1lh]"
                       />
                       <div className="font-medium">
-                        {25}%
+                        {product.ratingDistribution[stars] || 0}%
                       </div>
                     </Fragment>
                   ))}
