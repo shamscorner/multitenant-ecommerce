@@ -6,7 +6,11 @@ import { Tenant } from "@/payload-types";
 export const Products: CollectionConfig = {
   slug: "products",
   access: {
-    create: ({ req }) => isSuperAdmin(req.user) || !!(req.user?.tenants?.[0]?.tenant as Tenant).stripeDetailsSubmitted,
+    create: ({ req }) => {
+      if(isSuperAdmin(req.user)) return true;
+      const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
+      return tenant && !!tenant.stripeDetailsSubmitted;
+    }
     // other access rules are already handled by multiTenantPlugin
   },
   admin: {
