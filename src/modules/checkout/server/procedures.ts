@@ -33,6 +33,9 @@ export const checkoutRouter = createTRPCRouter({
               }
             }
           ]
+        },
+        select: {
+          content: false, // Exclude content field
         }
       });
 
@@ -126,6 +129,9 @@ export const checkoutRouter = createTRPCRouter({
             in: input.ids,
           },
         },
+        select: {
+          content: false, // Exclude content field
+        }
       });
 
       if (data.totalDocs !== input.ids.length) {
