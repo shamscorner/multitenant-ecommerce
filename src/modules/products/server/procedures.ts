@@ -4,7 +4,7 @@ import z from "zod";
 
 import { DEFAULT_LIMIT } from "@/constants";
 import { getFormattedSubcategories } from "@/modules/categories/utils";
-import { Media, Tenant } from "@/payload-types";
+import { Media, Review, Tenant } from "@/payload-types";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 import { sortValues } from "../searchParams";
@@ -189,7 +189,8 @@ export const productsRouter = createTRPCRouter({
         };
       }
 
-      const data = await ctx.db.find({
+      // Fetch products with the specified filters and sorting
+      const productsData = await ctx.db.find({
         collection: "products",
         depth: 2, // populate category, image & tenant with tenant image
         where,
@@ -198,31 +199,46 @@ export const productsRouter = createTRPCRouter({
         limit: input.limit,
       });
 
-      const dataWithSummarizedReviews = await Promise.all(
-        data.docs.map(async (doc) => {
-          const reviewsData = await ctx.db.find({
-            collection: "reviews",
-            pagination: false,
-            where: {
-              product: {
-                equals: doc.id,
-              },
-            },
-          });
+      // Fetch all reviews for all products in a single query
+      const productIds = productsData.docs.map((product) => product.id);
+      const allReviewsData = await ctx.db.find({
+        collection: "reviews",
+        depth: 0, // We want to just get ids, without populating
+        pagination: false,
+        where: {
+          product: {
+            in: productIds,
+          },
+        },
+      });
 
-          return {
-            ...doc,
-            reviewCount: reviewsData.totalDocs,
-            reviewRating:
-              reviewsData.docs.length === 0
-                ? 0
-                : reviewsData.docs.reduce((acc, review) => acc + review.rating, 0) / reviewsData.totalDocs
-          };
-        })
-      );
+      // Group reviews by product ID and calculate aggregations
+      const reviewsByProduct = allReviewsData.docs.reduce((acc, review) => {
+        const productId = review.product as string;
+        if (!acc[productId]) {
+          acc[productId] = [];
+        }
+        acc[productId].push(review);
+        return acc;
+      }, {} as Record<string, Review[]>);
+
+      // Map products and summarize reviews
+      const dataWithSummarizedReviews = productsData.docs.map((product) => {
+        const reviews = reviewsByProduct[product.id] || [];
+        const reviewCount = reviews.length;
+        const reviewRating = reviewCount === 0
+          ? 0
+          : reviews.reduce((acc, review) => acc + review.rating, 0) / reviewCount;
+
+        return {
+          ...product,
+          reviewCount,
+          reviewRating,
+        };
+      });
 
       return {
-        ...data,
+        ...productsData,
         docs: dataWithSummarizedReviews.map((doc) => {
           return {
             ...doc,

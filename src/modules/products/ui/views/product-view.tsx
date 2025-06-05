@@ -33,6 +33,11 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyLink = () => {
+    if (!navigator.clipboard) {
+      toast.error("Clipboard not supported in this browser");
+      return;
+    }
+
     navigator.clipboard.writeText(window.location.href)
       .then(() => {
         setIsCopied(true);
@@ -40,7 +45,7 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
         setTimeout(() => setIsCopied(false), 2000);
       })
       .catch(() => {
-        toast.error("Failed to copy link");
+        toast.error("Failed to copy link. Please copy manually.");
       });
   };
 
