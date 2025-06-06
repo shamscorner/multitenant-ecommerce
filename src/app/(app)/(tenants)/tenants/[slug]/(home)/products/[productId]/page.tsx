@@ -1,4 +1,6 @@
-import { ProductView } from "@/modules/products/ui/views/product-view";
+import { Suspense } from "react";
+
+import { ProductView, ProductViewSkeleton } from "@/modules/products/ui/views/product-view";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
 interface Props {
@@ -14,7 +16,9 @@ const Page = async ({ params }: Props) => {
 
   return (
     <HydrateClient>
-      <ProductView productId={productId} tenantSlug={tenantSlug} />
+      <Suspense fallback={<ProductViewSkeleton />}>
+        <ProductView productId={productId} tenantSlug={tenantSlug} />
+      </Suspense>
     </HydrateClient>
   );
 };

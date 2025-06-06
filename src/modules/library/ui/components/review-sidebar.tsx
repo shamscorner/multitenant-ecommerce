@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "@/trpc/client";
 
-import { ReviewForm } from "./review-form";
+import { ReviewForm, ReviewFormSkeleton } from "./review-form";
 
 interface Props {
   productId: string;
@@ -21,3 +21,5 @@ export const ReviewSidebar = ({ productId }: Props) => {
     />
   );
 };
+
+export const ReviewSidebarSkeleton = () => <ReviewFormSkeleton />;

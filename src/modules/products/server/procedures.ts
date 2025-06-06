@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { headers as getHeaders } from "next/headers";
 import { Sort, Where } from "payload";
 import z from "zod";
@@ -26,8 +27,11 @@ export const productsRouter = createTRPCRouter({
         }
       });
 
-      if(!product) {
-        throw new Error(`Product with ID ${input.id} not found.`);
+      if(!product || product.isArchived) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Product not found or has been archived.",
+        });
       }
 
       const headers = await getHeaders();
@@ -125,7 +129,11 @@ export const productsRouter = createTRPCRouter({
       tenantSlug: z.string().nullable().optional(),
     }))
     .query(async ({ ctx, input }) => {
-      const where: Where = {};
+      const where: Where = {
+        isArchived: {
+          not_equals: true,
+        }
+      };
 
       const sortMap: Record<typeof sortValues[number], Sort> = {
         trending: "name",
@@ -156,6 +164,12 @@ export const productsRouter = createTRPCRouter({
       if(input.tenantSlug) {
         where["tenant.slug"] = {
           equals: input.tenantSlug,
+        };
+      } else {
+        // If tenantSlug is not provided, we assume public products
+        // and filter out private products
+        where["isPrivate"] = {
+          not_equals: true,
         };
       }
 

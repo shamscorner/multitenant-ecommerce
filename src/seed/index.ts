@@ -4,10 +4,14 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
 
+import { stripe } from "@/lib/stripe";
+
 import { categories } from "./categories";
 
 const seed = async () => {
   const payload = await getPayload({ config });
+
+  const adminAccount = await stripe.accounts.create({});
 
   // Create admin tenant
   const adminTenant = await payload.create({
@@ -15,7 +19,7 @@ const seed = async () => {
     data: {
       name: process.env.ADMIN_TENANT_USERNAME || "admin",
       slug: process.env.ADMIN_TENANT_SLUG || "admin",
-      stripeAccountId: process.env.ADMIN_STRIPE_ACCOUNT_ID || "admin",
+      stripeAccountId: adminAccount.id,
     },
   });
 

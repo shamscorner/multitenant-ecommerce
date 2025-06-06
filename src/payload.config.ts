@@ -28,6 +28,11 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
+    components: {
+      beforeNavLinks: [
+        "@/components/stripe-verify#StripeVerify",
+      ]
+    }
   },
   collections: [Users, Media, Categories, Products, Tags, Tenants, Orders, Reviews],
   db: mongooseAdapter({
