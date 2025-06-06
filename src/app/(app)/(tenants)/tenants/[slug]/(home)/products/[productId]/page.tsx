@@ -7,6 +7,8 @@ interface Props {
   params: Promise<{ productId: string; slug: string }>;
 };
 
+export const dynamic = "force-dynamic"; // Ensure this page is always server-rendered
+
 const Page = async ({ params }: Props) => {
   const { productId, slug: tenantSlug } = await params;
 

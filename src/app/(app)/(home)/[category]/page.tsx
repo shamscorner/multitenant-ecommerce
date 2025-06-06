@@ -10,6 +10,8 @@ interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
+export const dynamic = "force-dynamic"; // Ensure this page is always server-rendered
+
 const Page = async ({ params, searchParams }: PageProps) => {
   const { category } = await params;
   const filters = await loadProductFilters(searchParams);

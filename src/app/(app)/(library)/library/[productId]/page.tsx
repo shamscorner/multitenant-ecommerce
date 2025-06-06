@@ -9,6 +9,8 @@ interface Props {
   }>
 }
 
+export const dynamic = "force-dynamic"; // Ensure this page is always server-rendered
+
 const Page = async ({ params }: Props) => {
   const { productId } = await params;
 
