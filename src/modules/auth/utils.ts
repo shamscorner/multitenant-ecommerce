@@ -17,10 +17,9 @@ export const generateAuthCookie = async ({
       name: `${prefix}-token`, // payload-token by default
       path: "/",
       value,
-      // TODO: ensure cross-domain cookie sharing
-      // sameSite: 'none',
-      // secure: true, // Enable this if using HTTPS
-      // domain: ''
+      sameSite: "none",
+      domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+      secure: process.env.NODE_ENV === "production",
     });
   } catch (error) {
     console.error("Error setting cookie:", error);
