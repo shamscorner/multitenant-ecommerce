@@ -2,6 +2,7 @@
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { useTRPC } from "@/trpc/client";
@@ -11,6 +12,12 @@ import { ReviewSidebar } from "../components/review-sidebar";
 interface Props {
   productId: string;
 }
+
+// Dynamically import the CartButton component to avoid server-side rendering issues
+const RichText = dynamic(() => import("@payloadcms/richtext-lexical/react").then(mod => mod.RichText), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
 
 export const ProductView = ({ productId }: Props) => {
   const trpc = useTRPC();
@@ -43,7 +50,7 @@ export const ProductView = ({ productId }: Props) => {
 
           <div className="lg:col-span-5">
             {library.content ? (
-              <p>{library.content}</p>
+              <RichText data={library.content} />
             ) : (
               <p className="font-medium italic text-muted-foreground">
                 No special content

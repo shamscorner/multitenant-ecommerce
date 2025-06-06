@@ -21,6 +21,12 @@ const CartButton = dynamic(() => import("../components/cart-button").then(mod =>
   loading: () => <Button disabled variant="reverse" className="flex-1">Add to cart</Button>,
 });
 
+// Dynamically import the CartButton component to avoid server-side rendering issues
+const RichText = dynamic(() => import("@payloadcms/richtext-lexical/react").then(mod => mod.RichText), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
+
 interface ProductViewProps {
   productId: string;
   tenantSlug: string;
@@ -116,7 +122,7 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
 
             <div className="p-6">
               {product.description ? (
-                <p>{product.description}</p>
+                <RichText data={product.description} />
               ) : (
                 <p className="font-medium text-muted-foreground italic">
                   No description provided
