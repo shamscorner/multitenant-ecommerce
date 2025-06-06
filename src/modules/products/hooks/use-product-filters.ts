@@ -3,6 +3,11 @@ import { parseAsArrayOf, parseAsString, parseAsStringLiteral,useQueryStates } fr
 import { sortValues } from "../searchParams";
 
 const params = {
+  search: parseAsString
+    .withOptions({
+      clearOnDefault: true,
+    })
+    .withDefault(""),
   sort: parseAsStringLiteral(sortValues)
     .withDefault("curated"),
   minPrice: parseAsString
