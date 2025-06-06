@@ -14,9 +14,8 @@ interface Props {
   productId: string;
 }
 
-// Dynamically import the CartButton component to avoid server-side rendering issues
+// Dynamically import the RichText component to avoid server-side rendering issuess
 const RichText = dynamic(() => import("@payloadcms/richtext-lexical/react").then(mod => mod.RichText), {
-  ssr: false,
   loading: () => <div>Loading...</div>,
 });
 

@@ -23,7 +23,6 @@ const CartButton = dynamic(() => import("../components/cart-button").then(mod =>
 
 // Dynamically import the CartButton component to avoid server-side rendering issues
 const RichText = dynamic(() => import("@payloadcms/richtext-lexical/react").then(mod => mod.RichText), {
-  ssr: false,
   loading: () => <div>Loading...</div>,
 });
 

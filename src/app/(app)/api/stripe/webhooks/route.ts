@@ -149,6 +149,10 @@ export async function POST(req: Request) {
       case "account.updated": {
         const account = event.data.object as Stripe.Account;
 
+        if (!event.account) {
+          throw new WebhookError("Missing account context in account.updated event", 422);
+        }
+
         // Validate account ID exists
         if (!account.id) {
           throw new WebhookError("Missing account ID in Stripe account object", 422);

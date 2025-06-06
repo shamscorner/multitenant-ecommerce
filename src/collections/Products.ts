@@ -11,7 +11,11 @@ export const Products: CollectionConfig = {
       const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
       return tenant && !!tenant.stripeDetailsSubmitted;
     },
-    delete: ({ req }) => isSuperAdmin(req.user),
+    delete: ({ req }) => {
+      if(isSuperAdmin(req.user)) return true;
+      const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
+      return tenant && !!tenant.stripeDetailsSubmitted;
+    },
     // other access rules are already handled by multiTenantPlugin
   },
   admin: {
