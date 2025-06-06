@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
     "db:fresh": "payload migrate:fresh",
     "db:seed": "bun run src/seed/index.ts",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhooks"
