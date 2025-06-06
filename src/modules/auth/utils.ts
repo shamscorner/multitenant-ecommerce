@@ -17,9 +17,11 @@ export const generateAuthCookie = async ({
       name: `${prefix}-token`, // payload-token by default
       path: "/",
       value,
-      sameSite: "none",
-      domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
-      secure: process.env.NODE_ENV === "production",
+      ...(process.env.NODE_ENV !== "development" && {
+        sameSite: "none",
+        domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+        secure: true
+      })
     });
   } catch (error) {
     console.error("Error setting cookie:", error);
